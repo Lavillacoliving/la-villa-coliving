@@ -27,8 +27,6 @@ export interface OuChercherProps {
   className?: string;
 }
 
-const SERIF = { fontFamily: '"DM Serif Display", serif' } as const;
-
 export function OuChercher({ variant, page, tone = "page", className = "" }: OuChercherProps) {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
@@ -51,7 +49,7 @@ export function OuChercher({ variant, page, tone = "page", className = "" }: OuC
       aria-labelledby="ou-chercher-title"
       className={className}
     >
-      <h2 id="ou-chercher-title" className={h2Class} style={SERIF}>{t.title}</h2>
+      <h2 id="ou-chercher-title" className={h2Class}>{t.title}</h2>
       {t.sections.map((s) => (
         <Fragment key={s.key}>
           <h3 className={h3Class}>{s.h3}</h3>

@@ -1678,7 +1678,6 @@ export function HouseDetailPage() {
             </div>
             <h1
               className="text-4xl md:text-7xl mb-4 text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.55)]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {(() => {
                 // SEO H1 par maison : capture le keyword principal de la page
@@ -1778,7 +1777,6 @@ export function HouseDetailPage() {
         <div className="container-custom">
           <h2
             className="text-3xl md:text-4xl mb-4 md:mb-6 text-[#1C1917]"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? `About ${house.name}`
@@ -1820,7 +1818,6 @@ export function HouseDetailPage() {
         <div className="container-custom">
           <h2
             className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {t.houseDetail.rooms}
           </h2>
@@ -1932,7 +1929,6 @@ export function HouseDetailPage() {
             <div className="lg:col-span-2">
               <h2
                 className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en" ? "What's included" : "Ce qui est inclus"}
               </h2>
@@ -2097,7 +2093,6 @@ export function HouseDetailPage() {
             <div className="container-custom max-w-5xl">
               <h2
                 className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en"
                   ? `Location: ${house.name} in ${house.location.split(',')[0]}`
@@ -2434,7 +2429,6 @@ export function HouseDetailPage() {
               <div className="container-custom max-w-3xl">
                 <h2
                   className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]"
-                  style={{ fontFamily: '"DM Serif Display", serif' }}
                 >
                   {language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
                 </h2>
@@ -2487,7 +2481,6 @@ export function HouseDetailPage() {
         <div className="container-custom">
           <h2
             className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Compare with our other houses" : "Compare avec nos autres maisons"}
           </h2>
@@ -2540,7 +2533,6 @@ export function HouseDetailPage() {
         <div className="container-custom relative text-center">
           <h2
             className="text-3xl md:text-4xl mb-4 text-white"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? `Ready to make ${house.name} your home?`

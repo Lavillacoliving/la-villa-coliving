@@ -93,7 +93,6 @@ export function HouseGallery({ images, houseName, cover, featured = [] }: HouseG
       <div className="container-custom">
         <h2
           className="text-3xl md:text-4xl mb-2 text-[#1C1917]"
-          style={{ fontFamily: '"DM Serif Display", serif' }}
         >
           {L === 'en' ? `Explore ${houseName}` : `Découvre ${houseName}`}
         </h2>

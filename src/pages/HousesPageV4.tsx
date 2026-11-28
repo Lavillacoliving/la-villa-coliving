@@ -188,7 +188,6 @@ export function HousesPageV4() {
           </span>
           <h1
             className="text-5xl md:text-6xl lg:text-7xl text-[#1C1917] mb-6"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? (
               <>
@@ -269,7 +268,6 @@ export function HousesPageV4() {
 
                   <h2
                     className="text-2xl text-[#1C1917] mb-3"
-                    style={{ fontFamily: '"DM Serif Display", serif' }}
                   >
                     {house.name}
                   </h2>
@@ -373,7 +371,6 @@ export function HousesPageV4() {
             </span>
             <h2
               className="text-3xl md:text-4xl text-[#1C1917]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "Side by Side" : "Côte à côte"}
             </h2>
@@ -458,7 +455,6 @@ export function HousesPageV4() {
         <div className="container-custom text-center">
           <h2
             className="text-3xl md:text-4xl text-white mb-4"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Not Sure Which One?"

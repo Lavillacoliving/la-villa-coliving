@@ -115,7 +115,6 @@ export function ColocationGenevePage() {
   };
   const lastUpdatedLabel = formatLongDate(lastUpdatedIso, L);
   const h2 = "text-3xl md:text-4xl text-[#1C1917] mb-6";
-  const serif = { fontFamily: "DM Serif Display, serif" } as const;
   const link = "text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]";
 
   return (
@@ -145,7 +144,7 @@ export function ColocationGenevePage() {
           <span className="lvc-eyebrow mb-4">
             {en ? "Shared housing · Greater Geneva" : "Colocation · Grand Genève"}
           </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-6 leading-tight" style={serif}>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-6 leading-tight">
             {en
               ? h1Accent("Shared housing in Geneva, the French-side version", "the French-side version")
               : h1Accent("Colocation à Genève, version côté France", "version côté France")}
@@ -196,7 +195,7 @@ export function ColocationGenevePage() {
       {/* ===== BLOC 1 — LES CHAMBRES DISPONIBLES (au-dessus de la ligne de flottaison) ===== */}
       <section id="chambres" className="py-16 lg:py-20 bg-white border-t border-[#E7E5E4]">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className={h2} style={serif}>
+          <h2 className={h2}>
             {n > 0
               ? (en ? `${n} shared-housing room${n > 1 ? "s" : ""} available near Geneva` : `${n} chambre${n > 1 ? "s" : ""} en colocation disponible${n > 1 ? "s" : ""} près de Genève`)
               : (en ? "Next openings near Geneva, house by house" : "Prochaines disponibilités près de Genève, maison par maison")}
@@ -242,7 +241,7 @@ export function ColocationGenevePage() {
       {/* ===== H2 — COMBIEN COÛTE UNE COLOCATION À GENÈVE ? ===== */}
       <section className="py-20 lg:py-24 bg-[#FAF9F6]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className={h2} style={serif}>{en ? "How much does a flatshare cost in Geneva?" : "Combien coûte une colocation à Genève ?"}</h2>
+          <h2 className={h2}>{en ? "How much does a flatshare cost in Geneva?" : "Combien coûte une colocation à Genève ?"}</h2>
           <p className="text-[#57534E] leading-relaxed mb-6">
             {en
               ? "In Geneva itself, based on listings observed in 2026, a room in a shared flat usually goes for 1,000 to 1,500 CHF a month, utilities and internet often on top; a studio, 1,800 to 2,500 CHF excluding charges, around 50 CHF/m² advertised according to our cross-border housing Observatory survey (June 2026). Supply is scarce (vacancy rate below 1%, OCSTAT) and every file competes with dozens of others."
@@ -278,7 +277,7 @@ export function ColocationGenevePage() {
       {/* ===== H2 — COMMENT FAIRE UNE COLOCATION À GENÈVE (FRONTALIER OU RÉSIDENT SUISSE) ===== */}
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className={h2} style={serif}>
+          <h2 className={h2}>
             {en ? "How to share a flat in Geneva as a cross-border worker or a Swiss resident" : "Comment faire une colocation à Genève quand on est frontalier ou résident suisse"}
           </h2>
           <p className="text-[#57534E] leading-relaxed mb-8">
@@ -315,7 +314,7 @@ export function ColocationGenevePage() {
       {/* ===== H2 — NOS 3 MAISONS ===== */}
       <section className="py-20 lg:py-24 bg-[#FAF9F6]">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className={h2} style={serif}>{en ? "Our 3 houses" : "Nos 3 maisons"}</h2>
+          <h2 className={h2}>{en ? "Our 3 houses" : "Nos 3 maisons"}</h2>
           <p className="text-[#57534E] mb-10 max-w-2xl">
             {en
               ? `${STATS.totalRooms} rooms in ${STATS.totalHouses} houses, ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space per flatmate. Each house has its own character; all three share the same all-inclusive rent and the same community.`
@@ -349,7 +348,7 @@ export function ColocationGenevePage() {
           {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES.
               (Lot L2) Deux ancres seulement — Léman Express depuis la gare d'Annemasse, tram 17 depuis Ambilly (D7) ; ni bus,
               ni « quelques minutes » de frontière (D6 : Le Lodge n'a aucune promesse de frontière). */}
-          <h2 className={h2} style={serif}>{en ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}</h2>
+          <h2 className={h2}>{en ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}</h2>
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
             {en
               ? `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin} and Cornavin in ${TRANSIT.trainCornavinMin}, no change. Door to door, count ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes to Geneva Eaux-Vives depending on the house, and ${TRANSIT.centreDoorToDoorMin} minutes to the city centre (Rive). Two transport anchors: the Léman Express from Annemasse station, and tram 17 from Ambilly (Rive in ${TRANSIT.byHouse.leloft.tramStop.tramToRiveMin} minutes by tram).`
@@ -394,7 +393,7 @@ export function ColocationGenevePage() {
       <section id="liste" className="py-20 lg:py-24 bg-white border-t border-[#E7E5E4]">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <span className="lvc-eyebrow mb-4">{en ? "Waiting list" : "Liste d'attente"}</span>
-          <h2 className={h2} style={serif}>{en ? "No room at your date? Be first in line." : "Pas de chambre à ta date ? Sois prioritaire."}</h2>
+          <h2 className={h2}>{en ? "No room at your date? Be first in line." : "Pas de chambre à ta date ? Sois prioritaire."}</h2>
           <p className="text-[#57534E] max-w-xl mx-auto mb-10">
             {en ? "Rooms open up all year round. Leave your details: we contact you as soon as a room matching your profile frees up." : "Des chambres se libèrent toute l'année. Laisse tes coordonnées : on te contacte dès qu'une chambre correspondant à ton profil se libère."}
           </p>
@@ -405,7 +404,7 @@ export function ColocationGenevePage() {
       {/* ===== CTA FINAL ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl mb-6" style={serif}>{en ? "Ready to find your room near Geneva?" : "Prêt à trouver ta chambre près de Genève ?"}</h2>
+          <h2 className="text-3xl md:text-4xl mb-6">{en ? "Ready to find your room near Geneva?" : "Prêt à trouver ta chambre près de Genève ?"}</h2>
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
             {en ? "Book a visit, on site or by video. Reply within 48 h. Move in within 72 h of your first contact if a room is available." : "Programme une visite, sur place ou en vidéo. Réponse sous 48 h. Emménagement en 72 h dès le premier contact si une chambre est disponible."}
           </p>

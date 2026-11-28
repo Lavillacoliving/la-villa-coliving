@@ -83,7 +83,6 @@ export function ColivingPageV4() {
             </span>
             <h1
               className="text-5xl md:text-6xl lg:text-7xl mb-8 text-white"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {h1Accent(t.colivingPage.hero.h1, "coliving", true)}
             </h1>
@@ -131,7 +130,6 @@ export function ColivingPageV4() {
               </span>
               <h2
                 className="text-4xl md:text-5xl text-[#1C1917] mb-6"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {t.colivingPage.whatIs.title}
               </h2>
@@ -179,7 +177,6 @@ export function ColivingPageV4() {
               </span>
               <h2
                 className="text-4xl md:text-5xl text-[#1C1917] mb-6"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {t.colivingPage.notColocation.title}
               </h2>
@@ -205,7 +202,6 @@ export function ColivingPageV4() {
             </span>
             <h2
               className="text-4xl md:text-5xl text-[#1C1917] mb-6"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {t.colivingPage.difference.title}
             </h2>
@@ -244,7 +240,6 @@ export function ColivingPageV4() {
               </span>
               <h2
                 className="text-4xl md:text-5xl text-[#1C1917] mb-8"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {t.colivingPage.benefits.title}
               </h2>
@@ -324,7 +319,6 @@ export function ColivingPageV4() {
               </span>
               <h2
                 className="text-4xl md:text-5xl text-[#1C1917] mb-6"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en"
                   ? "More Than Roommates"
@@ -396,7 +390,6 @@ export function ColivingPageV4() {
               </span>
               <h2
                 className="text-4xl md:text-5xl text-[#1C1917] mb-6"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {t.colivingPage.whoIsItFor.title}
               </h2>

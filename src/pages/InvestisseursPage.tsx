@@ -56,7 +56,6 @@ export function InvestisseursPage() {
           </span>
           <h1
             className="text-4xl md:text-5xl lg:text-6xl text-white mb-6 max-w-4xl mx-auto"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? h1Accent("Grow your assets with premium coliving", "premium coliving", true)
@@ -125,7 +124,6 @@ export function InvestisseursPage() {
           </span>
           <h2
             className="text-3xl md:text-4xl lg:text-5xl text-[#1C1917] mb-12"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Premium coliving, a booming market"
@@ -179,7 +177,6 @@ export function InvestisseursPage() {
             </span>
             <h2
               className="text-3xl md:text-4xl lg:text-5xl text-white mb-6"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en"
                 ? "You are the owner. We are the operators."
@@ -304,7 +301,6 @@ export function InvestisseursPage() {
             </span>
             <h2
               className="text-3xl md:text-4xl lg:text-5xl text-[#1C1917]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en"
                 ? "What makes us unique"
@@ -391,7 +387,6 @@ export function InvestisseursPage() {
           </span>
           <h2
             className="text-3xl md:text-4xl lg:text-5xl text-[#1C1917] mb-12"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "The ideal property for La Villa coliving"
@@ -466,7 +461,6 @@ export function InvestisseursPage() {
             </span>
             <h2
               className="text-3xl md:text-4xl lg:text-5xl text-white mb-4"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "Book a meeting" : "Prendre rendez-vous"}
             </h2>

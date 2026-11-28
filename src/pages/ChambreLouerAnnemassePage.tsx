@@ -99,7 +99,6 @@ export function ChambreLouerAnnemassePage() {
           </span>
           <h1
             className="text-4xl md:text-6xl text-[#1C1917] mb-6 leading-tight"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? h1Accent(`Rooms to rent in Annemasse: ${APPART.name}'s ${APPART.rooms.total} rooms and the Lodge's ${ROOMS_BY_HOUSE.lelodge} rooms`, APPART.commune)
@@ -156,7 +155,6 @@ export function ChambreLouerAnnemassePage() {
         <div className="max-w-6xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl text-[#1C1917] mb-3"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {candidates.length > 0
               ? (language === "en"
@@ -239,7 +237,6 @@ export function ChambreLouerAnnemassePage() {
         <div className="max-w-5xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Why rent your room at the Lodge, Annemasse"
@@ -292,7 +289,6 @@ export function ChambreLouerAnnemassePage() {
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
           <h2
             className="text-3xl md:text-4xl text-[#1C1917] mb-6 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Annemasse, Ville-la-Grand, Ambilly: La Villa Coliving's three houses and their commutes to Geneva"
@@ -334,7 +330,6 @@ export function ChambreLouerAnnemassePage() {
         <div className="max-w-5xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "How to rent your room — 4 steps" : "Comment louer ta chambre — 4 étapes"}
           </h2>
@@ -398,7 +393,6 @@ export function ChambreLouerAnnemassePage() {
           <Calendar className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
           <h2
             className="text-3xl md:text-4xl mb-6"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Check current room availability"

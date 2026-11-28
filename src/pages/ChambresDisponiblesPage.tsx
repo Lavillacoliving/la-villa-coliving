@@ -249,7 +249,7 @@ export function ChambresDisponiblesPage() {
           <span className="lvc-eyebrow mb-4">
             {en ? `${ENTITY_FACTS.brand.totalRooms} rooms · ${ENTITY_FACTS.brand.places} locations` : `${ENTITY_FACTS.brand.totalRooms} chambres · ${ENTITY_FACTS.brand.places} adresses`}
           </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-5">
             {en ? h1Accent("Available rooms near Geneva", "Available") : h1Accent("Chambres disponibles près de Genève", "disponibles")}
           </h1>
           {pillNow || pillSoon ? (
@@ -325,7 +325,7 @@ export function ChambresDisponiblesPage() {
           {!all.known ? (
             loadFailed ? (
               <div role="alert" className="bg-[#FAF9F6] border border-[#E7E5E4] rounded-2xl p-8 md:p-10 text-center">
-                <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-3" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-3">
                   {en ? "The rooms didn't load" : "Les chambres ne se sont pas chargées"}
                 </h2>
                 <p className="text-[#57534E] max-w-xl mx-auto">
@@ -364,7 +364,7 @@ export function ChambresDisponiblesPage() {
             availableShown.length > 0 ? (
               <>
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 mb-5 md:mb-8">
-                  <h2 className="text-3xl md:text-4xl text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                  <h2 className="text-3xl md:text-4xl text-[#1C1917]">
                     {en ? "Free now" : "Libre maintenant"}
                   </h2>
                   <p className="text-sm text-[#57534E]">
@@ -399,7 +399,7 @@ export function ChambresDisponiblesPage() {
             )
           ) : (
             <div className="bg-[#FAF9F6] border border-[#E7E5E4] rounded-2xl p-8 md:p-10 text-center">
-              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-3" style={{ fontFamily: '"DM Serif Display", serif' }}>
+              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-3">
                 {filtered
                   ? (en ? "No room matches this filter right now" : "Aucune chambre ne correspond à ce filtre pour l'instant")
                   : (en ? "No room is free right this moment" : "Aucune chambre libre à l'instant même")}
@@ -424,7 +424,7 @@ export function ChambresDisponiblesPage() {
         <section id="bientot" aria-labelledby="bientot-titre" className="py-12 lg:py-16 bg-[#EFEBE4] border-t border-[#E7E5E4] scroll-mt-24">
           <div className="container-custom">
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 mb-6">
-              <h2 id="bientot-titre" className="text-2xl md:text-[1.7rem] text-[#44403C]" style={{ fontFamily: '"DM Serif Display", serif' }}>
+              <h2 id="bientot-titre" className="text-2xl md:text-[1.7rem] text-[#44403C]">
                 {en ? "Opening soon" : "Bientôt disponibles"}
               </h2>
               <p className="text-sm text-[#57534E]">
@@ -506,7 +506,7 @@ export function ChambresDisponiblesPage() {
           la page vend la PROCHAINE libération, pas l'occupation du jour. */}
       <section className="py-14 lg:py-20 bg-[#FAF9F6] border-y border-[#E7E5E4]">
         <div className="container-custom">
-          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-2" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-2">
             {en ? "No room on your date? Join your house's waiting list" : "Pas de chambre à ta date ? Rejoins la liste d'attente de ta maison"}
           </h2>
           <p className="text-[#57534E] mb-8">

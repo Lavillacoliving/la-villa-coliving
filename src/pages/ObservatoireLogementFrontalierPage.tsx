@@ -273,7 +273,6 @@ export function ObservatoireLogementFrontalierPage() {
           </span>
           <h1
             className="text-4xl md:text-5xl mb-4 leading-tight"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {en ? "Where to live near Geneva " : "Où se loger près de Genève "}
             <em className="lvc-h1-accent lvc-h1-accent--on-photo">{en ? "without straying far?" : "sans s'éloigner ?"}</em>
@@ -377,7 +376,6 @@ export function ObservatoireLogementFrontalierPage() {
               </span>
               <h2
                 className="text-2xl md:text-3xl text-[#1C1917] mt-2 mb-5 leading-snug"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {en ? "A two-speed market" : "Un marché à deux vitesses"}
               </h2>
@@ -484,7 +482,7 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== LA DESSERTE, PAS LA DISTANCE — graphique signature (insight annoté) + paliers ===== */}
       <section className="py-12 lg:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-3 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-3 text-center">
             {en ? "The deciding factor is rail service, not distance" : "Le facteur déterminant : la desserte, pas la distance"}
           </h2>
           <p className="text-sm text-[#57534E] text-center mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -605,7 +603,6 @@ export function ObservatoireLogementFrontalierPage() {
           </p>
           <h2
             className="text-2xl md:text-3xl text-[#1C1917] mb-3 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {en ? "Find your town in three steps" : "Trouve ta commune en trois gestes"}
           </h2>
@@ -795,7 +792,6 @@ export function ObservatoireLogementFrontalierPage() {
             </span>
             <h2
               className="text-2xl md:text-3xl text-[#1C1917] mt-2 mb-3"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {en ? "Seen from our houses" : "Vu de nos maisons"}
             </h2>
@@ -1170,7 +1166,7 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== PRESSE & TÉLÉCHARGEMENTS + CTA (brief staging §5) ===== */}
       <section className="py-14 lg:py-20 bg-white border-t border-[#E7E5E4]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6 text-center">
             {en ? "Press & downloads" : "Presse & téléchargements"}
           </h2>
           {/* À citer */}

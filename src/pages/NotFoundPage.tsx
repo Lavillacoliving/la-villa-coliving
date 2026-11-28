@@ -52,13 +52,11 @@ export function NotFoundPage({ article = false }: { article?: boolean }) {
         <div className="container-custom text-center">
           <h1
             className="text-8xl md:text-9xl text-[#E7E5E4] mb-4"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             404
           </h1>
           <h2
             className="text-3xl md:text-4xl text-[#1C1917] mb-4"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Page Not Found" : "Page introuvable"}
           </h2>

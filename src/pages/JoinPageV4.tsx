@@ -349,7 +349,6 @@ export function JoinPageV4() {
           </span>
           <h1
             className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-4"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {/* (24/11/2026, refonte des pages de vente § 4.7) « Candidater » devient « Programmer une visite » : le formulaire
                 s'appelle « Viens nous rencontrer ». L'adresse /candidature, les événements GA4 et la logique d'envoi ne changent pas. */}
@@ -470,7 +469,6 @@ export function JoinPageV4() {
               </div>
               <h2
                 className="text-3xl md:text-4xl text-[#1C1917] mb-4"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {contextIsAppart
                   ? (language === "en" ? "Application received!" : "Candidature reçue !")
@@ -789,7 +787,6 @@ export function JoinPageV4() {
             </span>
             <h2
               className="text-4xl md:text-5xl text-[#1C1917]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "How It Works" : "Comment ça marche"}
             </h2>
@@ -945,7 +942,6 @@ export function JoinPageV4() {
             </span>
             <h2
               className="text-3xl md:text-4xl text-[#1C1917]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
             </h2>

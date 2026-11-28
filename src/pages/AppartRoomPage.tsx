@@ -64,7 +64,6 @@ import {
 const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
 
 const SITE = "https://www.lavillacoliving.com";
-const heading = { fontFamily: '"DM Serif Display", serif' };
 
 function track(event: string, params: Record<string, unknown>) {
   try {
@@ -93,7 +92,7 @@ export function AppartRoomPage() {
     return (
       <main className="pt-32 pb-20 bg-white">
         <div className="container-custom text-center">
-          <h1 className="text-3xl mb-4 text-[#1C1917]" style={heading}>{en ? "Room not found" : "Chambre introuvable"}</h1>
+          <h1 className="text-3xl mb-4 text-[#1C1917]">{en ? "Room not found" : "Chambre introuvable"}</h1>
           <LocalizedLink to="/chambres-disponibles" className="text-[#B8860B] font-semibold underline underline-offset-4">
             {en ? "See the available rooms" : "Voir les chambres disponibles"}
           </LocalizedLink>
@@ -139,7 +138,7 @@ export function AppartRoomPage() {
   const othersSection = others.length > 0 ? (
     <section className="py-14 lg:py-20 bg-[#FAF9F6] border-y border-[#E7E5E4]">
       <div className="container-custom">
-        <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6" style={heading}>{appartRoomOthersTitle(L)}</h2>
+        <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6">{appartRoomOthersTitle(L)}</h2>
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {others.map((r) => {
             const st = roomBadge(r, L);
@@ -177,7 +176,7 @@ export function AppartRoomPage() {
           <div className="container-custom">
             {breadcrumb}
             <p className="lvc-eyebrow mb-2">{eyebrow}</p>
-            <h1 className="text-3xl md:text-4xl text-[#1C1917] mb-4 max-w-3xl" style={heading}>{u.h1}</h1>
+            <h1 className="text-3xl md:text-4xl text-[#1C1917] mb-4 max-w-3xl">{u.h1}</h1>
             <p className="text-[#57534E] leading-relaxed max-w-2xl">{u.text}</p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <LocalizedLink
@@ -268,7 +267,7 @@ export function AppartRoomPage() {
         <div className="container-custom">
           {breadcrumb}
           <p className="lvc-eyebrow mb-2">{eyebrow}</p>
-          <h1 className="text-4xl md:text-5xl text-[#1C1917] mb-3" style={heading}>{appartRoomH1(n, L)}</h1>
+          <h1 className="text-4xl md:text-5xl text-[#1C1917] mb-3">{appartRoomH1(n, L)}</h1>
           <div className="flex flex-wrap items-center gap-3">
             <p className="text-[#57534E]">{specsLine}</p>
             {badge && (
@@ -327,7 +326,7 @@ export function AppartRoomPage() {
             <div className="lg:hidden">{priceCard}</div>
 
             <div>
-              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4" style={heading}>{labels.theRoom}</h2>
+              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4">{labels.theRoom}</h2>
               <p className="text-[#57534E] leading-relaxed max-w-2xl">{appartRoomIntro(n, L)}</p>
               <dl className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {appartRoomSpecs(n, L).map(({ kind, label, value }) => {
@@ -346,7 +345,7 @@ export function AppartRoomPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4" style={heading}>{included.title}</h2>
+              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4">{included.title}</h2>
               <ul aria-label={en ? "Included" : "Compris"} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {included.included.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[#44403C]">
@@ -366,13 +365,13 @@ export function AppartRoomPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4" style={heading}>{lease.title}</h2>
+              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4">{lease.title}</h2>
               <p className="text-[#57534E] leading-relaxed max-w-2xl">{lease.lease}</p>
               <p className="text-[#57534E] leading-relaxed max-w-2xl mt-2">{lease.deposit}</p>
             </div>
 
             <div>
-              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4" style={heading}>{place.title}</h2>
+              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4">{place.title}</h2>
               <p className="text-[#57534E] leading-relaxed max-w-2xl">{place.text}</p>
               <ul className="mt-3 space-y-1.5">
                 {place.commute.map((c) => (

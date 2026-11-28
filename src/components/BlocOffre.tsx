@@ -237,7 +237,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             <p className="lvc-eyebrow mb-2">
               La Villa Coliving · {h.label}
             </p>
-            <h2 className="text-xl md:text-2xl text-[#1C1917] mb-2" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            <h2 className="text-xl md:text-2xl text-[#1C1917] mb-2">
               {HEADLINES[bucket][L]}
             </h2>
             <p className="text-lg text-[#1C1917] font-semibold mb-4">

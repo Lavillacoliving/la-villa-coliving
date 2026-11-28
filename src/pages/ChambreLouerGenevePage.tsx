@@ -67,7 +67,6 @@ export function ChambreLouerGenevePage() {
     trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "chambre_a_louer_geneve", language: L });
   const link = "text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]";
   const h2 = "text-3xl md:text-4xl text-[#1C1917] mb-6";
-  const serif = { fontFamily: '"DM Serif Display", serif' } as const;
 
   return (
     <main className="relative pt-16">
@@ -91,7 +90,7 @@ export function ChambreLouerGenevePage() {
           <span className="lvc-eyebrow mb-4">
             {en ? "Furnished rooms · French side of Geneva" : "Chambres meublées · côté France de Genève"}
           </span>
-          <h1 className="text-4xl md:text-6xl text-[#1C1917] mb-6 leading-tight" style={serif}>
+          <h1 className="text-4xl md:text-6xl text-[#1C1917] mb-6 leading-tight">
             {en
               ? h1Accent("Rooms to rent near Geneva, furnished and all inclusive", "furnished and all inclusive")
               : h1Accent("Chambres à louer près de Genève, meublées et tout inclus", "meublées et tout inclus")}
@@ -120,7 +119,7 @@ export function ChambreLouerGenevePage() {
       {/* ===== BLOC 1 — LA LISTE (forme d'annuaire : chambres, prix, dates) ===== */}
       <section id="chambres" className="py-16 lg:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className={h2} style={serif}>
+          <h2 className={h2}>
             {n > 0
               ? (en ? `${n} furnished room${n > 1 ? "s" : ""} to rent near Geneva, all inclusive` : `${n} chambre${n > 1 ? "s" : ""} à louer près de Genève, meublée${n > 1 ? "s" : ""} et tout inclus`)
               : (en ? "Next rooms opening near Geneva, house by house" : "Prochaines chambres près de Genève, maison par maison")}
@@ -173,7 +172,7 @@ export function ChambreLouerGenevePage() {
       {/* ===== H2 — PRIX D'UNE CHAMBRE À LOUER À GENÈVE ===== */}
       <section className="py-20 lg:py-24 bg-[#FAF9F6]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className={h2} style={serif}>{en ? "Price of a room to rent in Geneva" : "Prix d'une chambre à louer à Genève"}</h2>
+          <h2 className={h2}>{en ? "Price of a room to rent in Geneva" : "Prix d'une chambre à louer à Genève"}</h2>
           <p className="text-[#57534E] leading-relaxed mb-6">
             {en
               ? `In Geneva itself, based on listings observed in 2026, a room usually rents for 1,000 to 1,500 CHF a month and a studio 1,800 to 2,500 CHF excluding charges, around 50 CHF/m² advertised according to our cross-border housing Observatory survey (June 2026); the vacancy rate is below 1% (OCSTAT). « Cheap room in Geneva »: compare the total cost, not the advertised rent. In Geneva you add bills, an internet subscription, cleaning and the furniture to buy to the bare rent; on the French side, at La Villa Coliving, the package from ${PRICE_FROM_CHF_EN}/month includes everything: furnished room, bills, fibre, parking, cleaning of the common areas, pool, sauna, gym. Comfort and space make the difference, not the lowest rent.`
@@ -205,7 +204,7 @@ export function ChambreLouerGenevePage() {
       {/* ===== H2 — CHAMBRE MEUBLÉE, PRÊTE À VIVRE ===== */}
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className={h2} style={serif}>{en ? "A furnished room, ready to live in" : "Chambre meublée, prête à vivre"}</h2>
+          <h2 className={h2}>{en ? "A furnished room, ready to live in" : "Chambre meublée, prête à vivre"}</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-lg text-[#1C1917] mb-2">{en ? "In the room" : "Dans la chambre"}</h3>
@@ -230,7 +229,7 @@ export function ChambreLouerGenevePage() {
       {/* ===== H2 — CHEZ L'HABITANT, SOUS-LOCATION OU COLIVING ? ===== */}
       <section className="py-20 lg:py-24 bg-[#FAF9F6]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className={h2} style={serif}>{en ? "Room in someone's home, sublet or coliving?" : "Chambre chez l'habitant, sous-location ou coliving ?"}</h2>
+          <h2 className={h2}>{en ? "Room in someone's home, sublet or coliving?" : "Chambre chez l'habitant, sous-location ou coliving ?"}</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {(en
               ? [["In someone's home", "You live in the landlord's flat, by their rules, often without a real lease. Fine for a few weeks; hard to make a home."], ["Sublet", "Your right to stay depends on someone else's lease. Bills on top, no guarantee of duration, and the main tenant between you and the owner."], ["Coliving at La Villa", "A direct, furnished lease in your name, a single all-inclusive rent, a whole house shared with people who work in Geneva, and no landlord on site."]]
@@ -249,7 +248,7 @@ export function ChambreLouerGenevePage() {
       {/* ===== H2 — CONDITIONS POUR LOUER UNE CHAMBRE ===== */}
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className={h2} style={serif}>{en ? "Conditions to rent a room" : "Conditions pour louer une chambre"}</h2>
+          <h2 className={h2}>{en ? "Conditions to rent a room" : "Conditions pour louer une chambre"}</h2>
           <p className="text-[#57534E] leading-relaxed mb-8">
             {en
               ? "A Geneva lease usually asks for a Swiss rental history, a local guarantor and a deposit of up to three months. On the French side, at La Villa, the file is simple and the same for cross-border workers and Swiss residents who move over:"
@@ -275,7 +274,7 @@ export function ChambreLouerGenevePage() {
       {/* ===== H2 — NOS 3 MAISONS ===== */}
       <section className="py-20 lg:py-24 bg-[#FAF9F6]">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className={h2} style={serif}>{en ? "Our 3 houses" : "Nos 3 maisons"}</h2>
+          <h2 className={h2}>{en ? "Our 3 houses" : "Nos 3 maisons"}</h2>
           {/* (L'Appart, E4, S11.6) Sous le titre, qui ne change pas : une ligne pour L'Appart, son nom mène à sa page. */}
           <p className="-mt-2 mb-8 text-[#57534E]">
             {en ? "And " : "Et "}
@@ -317,7 +316,7 @@ export function ChambreLouerGenevePage() {
           {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES.
               (Lot L2) Deux ancres seulement — Léman Express depuis la gare d'Annemasse, tram 17 depuis Ambilly (D7) ; ni bus,
               ni « quelques minutes » de frontière (D6 : Le Lodge n'a aucune promesse de frontière). */}
-          <h2 className={h2} style={serif}>{en ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}</h2>
+          <h2 className={h2}>{en ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}</h2>
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
             {en
               ? `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin} and Cornavin in ${TRANSIT.trainCornavinMin}, no change. Door to door, count ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes to Geneva Eaux-Vives depending on the house, and ${TRANSIT.centreDoorToDoorMin} minutes to the city centre (Rive). Two transport anchors: the Léman Express from Annemasse station, and tram 17 from Ambilly (Rive in ${TRANSIT.byHouse.leloft.tramStop.tramToRiveMin} minutes by tram).`
@@ -337,7 +336,7 @@ export function ChambreLouerGenevePage() {
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <Calendar className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-          <h2 className="text-3xl md:text-4xl mb-6" style={serif}>{en ? "See the rooms available right now" : "Voir les chambres disponibles maintenant"}</h2>
+          <h2 className="text-3xl md:text-4xl mb-6">{en ? "See the rooms available right now" : "Voir les chambres disponibles maintenant"}</h2>
           {/* (L'Appart, E4, S11.6) Les chambres de la marque (33 : ENTITY_FACTS.brand). */}
           <p className="text-lg text-white/80 mb-10 leading-relaxed">
             {en ? `Availability changes every week across our ${ENTITY_FACTS.brand.totalRooms} rooms. Pick a room or join a waiting list: we reply within 48 h.` : `Les disponibilités évoluent chaque semaine sur nos ${ENTITY_FACTS.brand.totalRooms} chambres. Choisis une chambre ou rejoins une liste d'attente : on te répond sous 48 h.`}

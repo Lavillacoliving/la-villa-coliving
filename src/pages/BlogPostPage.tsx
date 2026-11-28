@@ -376,10 +376,10 @@ export function BlogPostPage() {
     // Render markdown H1 as <h2> so each blog page keeps exactly one <h1>.
     // id = slug de chapitre (cible du sommaire) ; scroll-mt-24 pour ne pas passer sous la navbar fixe.
     h1: ({children}: {children?: React.ReactNode}) => (
-      <h2 id={slugify(nodeText(children))} className="scroll-mt-24 text-2xl md:text-3xl text-[#1C1917] mt-12 mb-4" style={{fontFamily: '"DM Serif Display", serif'}}>{children}</h2>
+      <h2 id={slugify(nodeText(children))} className="scroll-mt-24 text-2xl md:text-3xl text-[#1C1917] mt-12 mb-4">{children}</h2>
     ),
     h2: ({children}: {children?: React.ReactNode}) => (
-      <h2 className="text-2xl md:text-3xl text-[#1C1917] mt-12 mb-4" style={{fontFamily: '"DM Serif Display", serif'}}>{children}</h2>
+      <h2 className="text-2xl md:text-3xl text-[#1C1917] mt-12 mb-4">{children}</h2>
     ),
     h3: ({children}: {children?: React.ReactNode}) => (
       <h3 className="text-xl md:text-2xl text-[#1C1917] mt-8 mb-3">{children}</h3>
@@ -547,7 +547,7 @@ export function BlogPostPage() {
           <span className="lvc-eyebrow mb-4">
             {CL[post.category]?.[language]||post.category}
           </span>
-          <h1 className="text-4xl md:text-5xl text-[#1C1917] mb-6" style={{fontFamily: '"DM Serif Display", serif'}}>
+          <h1 className="text-4xl md:text-5xl text-[#1C1917] mb-6">
             {typoFr(title)}
           </h1>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[#78716C] mb-8 pb-8 border-b border-[#E7E5E4]">
@@ -682,7 +682,6 @@ export function BlogPostPage() {
         <div className="max-w-5xl mx-auto px-6">
           <h2
             className="text-2xl md:text-3xl text-[#1C1917] mb-3 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Discover our houses" : "Découvre nos maisons"}
           </h2>
@@ -730,7 +729,6 @@ export function BlogPostPage() {
           <div className="max-w-5xl mx-auto px-6">
             <h2
               className="text-2xl md:text-3xl text-[#1C1917] mb-8 text-center"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "Related Articles" : "Articles Connexes"}
             </h2>

@@ -61,7 +61,6 @@ import {
 
 /** Marge de défilement des sections ancrées : barre de 4rem + bandeau de l'offre (--lvc-banner-h, src/index.css). */
 const SCROLL_MT = "scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]";
-const SERIF = { fontFamily: '"DM Serif Display", serif' } as const;
 const H2 = "text-3xl md:text-4xl text-[#1C1917] mb-6";
 const H3 = "text-lg font-semibold text-[#1C1917] mb-2";
 const LINK = "underline underline-offset-4 text-[#1C1917] hover:text-[#b8860b] transition-colors";
@@ -226,7 +225,7 @@ function BudgetSection({ L }: { L: TarifsLang }) {
   return (
     <section id={TARIFS_ANCHORS.calcul} aria-labelledby="calcul-title" className={`py-16 lg:py-20 bg-white ${SCROLL_MT}`}>
       <div className="max-w-3xl mx-auto px-6">
-        <h2 id="calcul-title" className={H2} style={SERIF}>{T.title}</h2>
+        <h2 id="calcul-title" className={H2}>{T.title}</h2>
         {/* Les trois paragraphes de réponse, sans rien entre le titre et eux. */}
         <div className="space-y-4 text-[#44403C] leading-relaxed">
           {T.answers.map((p) => <p key={p}>{p}</p>)}
@@ -301,7 +300,7 @@ function ValueSection({ L }: { L: TarifsLang }) {
   return (
     <section className="py-16 lg:py-20 bg-[#FAF9F6] scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]" id={PRICE_INCLUDES_ANCHOR}>
       <div className="max-w-3xl mx-auto px-6">
-        <h2 className={H2} style={SERIF}>{T.title}</h2>
+        <h2 className={H2}>{T.title}</h2>
         <p className="text-[#44403C] leading-relaxed">{T.intro}</p>
         <div className="mt-10 space-y-10 text-[#44403C] leading-relaxed">
           <div>
@@ -384,7 +383,7 @@ function IncludedSection({ L }: { L: TarifsLang }) {
   return (
     <section id={TARIFS_ANCHORS.inclus} aria-labelledby="inclus-title" className={`py-16 lg:py-20 bg-[#FAF9F6] ${SCROLL_MT}`}>
       <div className="max-w-5xl mx-auto px-6">
-        <h2 id="inclus-title" className={H2} style={SERIF}>{T.title}</h2>
+        <h2 id="inclus-title" className={H2}>{T.title}</h2>
         <p className="text-[#44403C] leading-relaxed max-w-3xl">{T.intro}</p>
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
           {inclusGroups(L).map((g) => (
@@ -414,7 +413,7 @@ function PricesSection({ L }: { L: TarifsLang }) {
   return (
     <section id={TARIFS_ANCHORS.prices} aria-labelledby={TARIFS_ANCHORS.pricesTitle} className={`py-16 lg:py-20 bg-white ${SCROLL_MT}`}>
       <div className="max-w-5xl mx-auto px-6">
-        <h2 id={TARIFS_ANCHORS.pricesTitle} className={H2} style={SERIF}>{T.title}</h2>
+        <h2 id={TARIFS_ANCHORS.pricesTitle} className={H2}>{T.title}</h2>
         <p className="text-[#44403C] leading-relaxed max-w-3xl mb-6">{T.intro}</p>
         <div className={`${TABLE_FRAME} ${FRAME_CARDS}`} role="region" aria-labelledby={TARIFS_ANCHORS.pricesTitle} tabIndex={0}>
           <table className={`w-full md:min-w-[640px] border-separate border-spacing-0 text-sm ${TABLE_CARDS}`}>
@@ -471,7 +470,7 @@ function OfferSection({ L }: { L: TarifsLang }) {
     <section id={TARIFS_ANCHORS.offer} aria-labelledby="offre-title" data-tarifs-offer="" className={`py-12 bg-white ${SCROLL_MT}`}>
       <div className="max-w-3xl mx-auto px-6">
         <div className="rounded-2xl border border-[#D4A574] bg-[#FAF9F6] p-6 md:p-8">
-          <h2 id="offre-title" className="text-2xl md:text-3xl text-[#1C1917] mb-2" style={SERIF}>{T.title}</h2>
+          <h2 id="offre-title" className="text-2xl md:text-3xl text-[#1C1917] mb-2">{T.title}</h2>
           <p className="mb-4 text-sm text-[#78716C]">{T.chf}</p>
           <p className="text-[#44403C] leading-relaxed mb-3">{T.subtitle}</p>
           <p className="text-[#44403C] leading-relaxed mb-6">{T.deadline}</p>
@@ -515,7 +514,7 @@ function AppartSection({ L }: { L: TarifsLang }) {
             />
           </div>
           <div className="p-6 md:p-8 md:col-span-3 flex flex-col">
-            <h2 id="lappart-title" className="text-2xl md:text-3xl text-[#1C1917] leading-tight" style={SERIF}>{T.title}</h2>
+            <h2 id="lappart-title" className="text-2xl md:text-3xl text-[#1C1917] leading-tight">{T.title}</h2>
             {T.paragraphs.map((p) => <p key={p} className="mt-3 text-[#44403C] leading-relaxed">{p}</p>)}
             <LocalizedLink
               to={`/${APPART.key}`}
@@ -538,7 +537,7 @@ function ApplySection({ L }: { L: TarifsLang }) {
   return (
     <section className="py-20 lg:py-24 bg-[#D4A574]">
       <div className="container-custom text-center">
-        <h2 className="text-3xl md:text-4xl text-white mb-4" style={SERIF}>{T.title}</h2>
+        <h2 className="text-3xl md:text-4xl text-white mb-4">{T.title}</h2>
         <p className="text-lg text-white/90 max-w-xl mx-auto mb-8">{T.text}</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <LocalizedLink
@@ -626,7 +625,6 @@ export function RatesPageV4() {
           </span>
           <h1
             className="text-5xl md:text-6xl lg:text-7xl text-[#1C1917]"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {en ? (
               <>

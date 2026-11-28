@@ -21,7 +21,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     <section className="mb-10">
       <h2
         className="text-2xl text-[#1C1917] mb-4"
-        style={{ fontFamily: '"DM Serif Display", serif' }}
       >
         {title}
       </h2>
@@ -48,7 +47,6 @@ export function CharteTransparencePage() {
         <div className="container-custom max-w-3xl py-20">
           <h1
             className="text-4xl md:text-5xl text-[#1C1917] mb-4"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {isEn ? "Our transparency charter" : "Notre charte de transparence"}
           </h1>

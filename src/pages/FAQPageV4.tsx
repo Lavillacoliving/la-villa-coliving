@@ -88,7 +88,6 @@ export function FAQPageV4() {
           </span>
           <h1
             className="text-3xl md:text-4xl lg:text-5xl text-[#1C1917] mb-6"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? (
               <>
@@ -262,7 +261,6 @@ export function FAQPageV4() {
                   >
                     <h2
                       className="text-2xl text-[#1C1917] mb-6"
-                      style={{ fontFamily: '"DM Serif Display", serif' }}
                     >
                       {categoryDisplayName(category)}
                     </h2>
