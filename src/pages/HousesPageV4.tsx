@@ -280,7 +280,7 @@ export function HousesPageV4() {
                   <div className="space-y-2 mb-6">
                     {house.features.map((feature, i) => (
                       <div key={i} className="flex items-center gap-2 text-sm text-[#44403C]">
-                        <Check className="w-4 h-4 text-[#D4A574] flex-shrink-0" />
+                        <Check className="w-4 h-4 text-lvc-accent flex-shrink-0" />
                         {feature}
                       </div>
                     ))}
@@ -295,7 +295,7 @@ export function HousesPageV4() {
                           {language === "en" ? "from" : "dès"}
                         </span>
                       )}
-                      <span className="text-2xl font-light text-[#D4A574]">
+                      <span className="text-2xl font-light text-lvc-accent">
                         {house.name === "La Villa"
                           ? (language === "en" ? PRICE_FROM_EN_NUM : PRICE_FROM_FR_NUM)
                           : house.price}{" "}
@@ -332,11 +332,11 @@ export function HousesPageV4() {
                     </div>
                     {house.id === "lelodge" ? (
                       <p className="mt-3 text-sm text-[#78716C]">
-                        <LocalizedLink to="/annemasse-colocation" className="underline hover:text-[#D4A574] transition-colors">
+                        <LocalizedLink to="/annemasse-colocation" className="underline hover:text-lvc-accent transition-colors">
                           {language === "en" ? "lavillacoliving.com/en/annemasse-colocation" : "lavillacoliving.com/annemasse-colocation"}
                         </LocalizedLink>
                         {" · "}
-                        <LocalizedLink to="/chambre-a-louer-annemasse" className="underline hover:text-[#D4A574] transition-colors">
+                        <LocalizedLink to="/chambre-a-louer-annemasse" className="underline hover:text-lvc-accent transition-colors">
                           {language === "en" ? "lavillacoliving.com/en/chambre-a-louer-annemasse" : "lavillacoliving.com/chambre-a-louer-annemasse"}
                         </LocalizedLink>
                       </p>
@@ -344,7 +344,7 @@ export function HousesPageV4() {
                       <LocalizedLink
                         to={`/${house.id}`}
                         onClick={() => track("house_discover_click", { house: house.id, cta_position: "nos_maisons_link", page: "nos-maisons", language: L })}
-                        className="mt-3 inline-block text-sm text-[#78716C] underline hover:text-[#D4A574] transition-colors"
+                        className="mt-3 inline-block text-sm text-[#78716C] underline hover:text-lvc-accent transition-colors"
                       >
                         {language === "en" ? `Flatshare in ${house.location}` : `Colocation à ${house.location}`}
                       </LocalizedLink>
@@ -402,7 +402,7 @@ export function HousesPageV4() {
                     {row.values.map((val, i) => (
                       <td key={i} className="py-4 px-4 text-center text-sm text-[#57534E]">
                         {val === true ? (
-                          <Check className="w-5 h-5 text-[#D4A574] mx-auto" />
+                          <Check className="w-5 h-5 text-lvc-accent mx-auto" />
                         ) : val === false ? (
                           <X className="w-5 h-5 text-[#78716C]/40 mx-auto" />
                         ) : (

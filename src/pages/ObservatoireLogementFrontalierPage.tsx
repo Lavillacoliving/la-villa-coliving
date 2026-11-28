@@ -268,7 +268,7 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== HERO — plein contraste, le chiffre-choc en très grand (brief staging 07/2026) ===== */}
       <section className="bg-[#1C1917] text-white">
         <div className="max-w-5xl mx-auto px-6 pt-16 pb-14 lg:pt-24 lg:pb-16 text-center">
-          <span className="lvc-eyebrow text-[#D4A574] mb-4">
+          <span className="lvc-eyebrow text-[#E0BB8A] mb-4">
             {en ? "Cross-border housing observatory · Edition 1" : "Observatoire du logement frontalier · Édition 1"}
           </span>
           <h1
@@ -294,7 +294,7 @@ export function ObservatoireLogementFrontalierPage() {
                 <span className="block text-xs text-white/40 mt-0.5">≈ {GENEVA_EAUXVIVES_EUR} €</span>
               </div>
             </div>
-            <div className="flex sm:flex-col items-center justify-center gap-1 text-[#D4A574]">
+            <div className="flex sm:flex-col items-center justify-center gap-1 text-[#E0BB8A]">
               <Train className="w-6 h-6" />
               <ArrowRight className="w-5 h-5 rotate-90 sm:rotate-0" />
             </div>
@@ -308,7 +308,7 @@ export function ObservatoireLogementFrontalierPage() {
               </div>
             </div>
           </div>
-          <p className="mt-9 text-xl md:text-2xl font-semibold text-[#D4A574]">
+          <p className="mt-9 text-xl md:text-2xl font-semibold text-[#E0BB8A]">
             {en
               ? `= ≈ CHF ${TRANSFRONT_DELTA_CHF} saved per month (≈ €${TRANSFRONT_DELTA_EUR}), on the French side.`
               : `= ≈ ${TRANSFRONT_DELTA_CHF} CHF d'économie par mois (≈ ${TRANSFRONT_DELTA_EUR} €), côté France.`}
@@ -369,7 +369,7 @@ export function ObservatoireLogementFrontalierPage() {
       <section className="py-12 lg:py-16 bg-[#FAF9F6]">
         <div className="max-w-3xl mx-auto px-6">
           <div className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm">
-            <div className="h-1.5 bg-[#D4A574]" />
+            <div className="h-1.5 bg-lvc-accent" />
             <div className="p-6 sm:p-9">
               <span className="lvc-eyebrow">
                 {en ? "Key finding" : "Constat principal"}
@@ -390,7 +390,7 @@ export function ObservatoireLogementFrontalierPage() {
               </div>
 
               {/* Pull-quote OCSTAT — la citation en grand, pas noyée dans un paragraphe */}
-              <blockquote className="border-l-4 border-[#D4A574] pl-5 sm:pl-6 my-7">
+              <blockquote className="border-l-4 border-lvc-accent pl-5 sm:pl-6 my-7">
                 <p className="text-lg md:text-xl text-[#44403C] leading-relaxed italic" style={{ fontFamily: '"DM Serif Display", serif' }}>
                   {en
                     ? "“Rents on recently concluded leases are generally substantially higher than those paid by people who have occupied the same flat for a long time.”"
@@ -615,12 +615,12 @@ export function ObservatoireLogementFrontalierPage() {
           {/* ÉTAPE 1 — curseur budget */}
           <div className="bg-white border border-[#E7E5E4] rounded-xl p-5 mb-5">
             <p className="text-sm mb-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#D4A574] mr-2">{en ? "Step 1" : "Étape 1"}</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-lvc-accent mr-2">{en ? "Step 1" : "Étape 1"}</span>
               <span className="font-semibold text-[#44403C]">{en ? "Set your monthly budget with the slider — towns over budget fade out." : "Définis ton budget mensuel avec le curseur — les communes hors budget se grisent."}</span>
             </p>
             <div className="flex items-center gap-3 flex-wrap">
               <label htmlFor="budget" className="text-sm text-[#57534E] whitespace-nowrap flex items-center gap-2">
-                <Wallet className="w-4 h-4 text-[#D4A574]" />
+                <Wallet className="w-4 h-4 text-lvc-accent" />
                 {en ? "My housing budget" : "Mon budget logement"}
               </label>
               <input
@@ -631,7 +631,7 @@ export function ObservatoireLogementFrontalierPage() {
                 step={50}
                 value={budget}
                 onChange={(e) => setBudget(Number(e.target.value))}
-                className="flex-1 min-w-[160px] accent-[#D4A574]"
+                className="flex-1 min-w-[160px] accent-lvc-accent"
               />
               <span className="text-base font-medium text-[#1C1917] whitespace-nowrap min-w-[96px] text-right">
                 {budget} €/{en ? "mo" : "mois"}
@@ -654,7 +654,7 @@ export function ObservatoireLogementFrontalierPage() {
 
           {/* ÉTAPE 2 — filtre mode */}
           <p className="text-sm mb-3 mt-6">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#D4A574] mr-2">{en ? "Step 2" : "Étape 2"}</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-lvc-accent mr-2">{en ? "Step 2" : "Étape 2"}</span>
             <span className="font-semibold text-[#44403C]">{en ? "Choose how you commute" : "Choisis ton mode de déplacement"}</span>
           </p>
           <div className="flex items-center gap-2 flex-wrap mb-6">
@@ -671,8 +671,8 @@ export function ObservatoireLogementFrontalierPage() {
                   }}
                   className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border transition-colors ${
                     active
-                      ? "bg-[#D4A574] text-white border-[#D4A574]"
-                      : "bg-white text-[#57534E] border-[#E7E5E4] hover:border-[#D4A574]"
+                      ? "bg-lvc-ink text-white border-lvc-ink"
+                      : "bg-white text-[#57534E] border-[#E7E5E4] hover:border-lvc-ink"
                   }`}
                   aria-pressed={active}
                 >
@@ -685,7 +685,7 @@ export function ObservatoireLogementFrontalierPage() {
 
           {/* ÉTAPE 3 — tableau (toutes les colonnes restent dans le DOM = lisible sans JS / crawlable) */}
           <p className="text-sm mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#D4A574] mr-2">{en ? "Step 3" : "Étape 3"}</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-lvc-accent mr-2">{en ? "Step 3" : "Étape 3"}</span>
             <span className="font-semibold text-[#44403C]">{en ? "Find the town that fits you — click a column header to sort." : "Trouve la commune qui te correspond — clique sur un en-tête de colonne pour trier."}</span>
           </p>
           <div className="overflow-x-auto bg-white border border-[#E7E5E4] rounded-xl">
@@ -784,7 +784,7 @@ export function ObservatoireLogementFrontalierPage() {
       <section className="py-12 lg:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-6">
           <div className="border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm">
-            <div className="h-1.5 bg-[#D4A574]" />
+            <div className="h-1.5 bg-lvc-accent" />
             <div className="bg-[#FAF9F6] p-5 sm:p-8">
           <div className="text-center mb-8">
             <span className="lvc-eyebrow">
@@ -796,7 +796,7 @@ export function ObservatoireLogementFrontalierPage() {
               {en ? "Seen from our houses" : "Vu de nos maisons"}
             </h2>
             <p className="inline-flex items-center gap-2 text-xs text-[#57534E] bg-white border border-[#E7E5E4] rounded-full px-4 py-1.5">
-              <Home className="w-3.5 h-3.5 text-[#D4A574]" />
+              <Home className="w-3.5 h-3.5 text-lvc-accent" />
               {en
                 ? `La Villa data · ${BAROMETRE.housesCount} houses · ${BAROMETRE.roomsCount} rooms · ${BAROMETRE.residentsCovered} residents since October 2021`
                 : `Données La Villa · ${BAROMETRE.housesCount} maisons · ${BAROMETRE.roomsCount} chambres · ${BAROMETRE.residentsCovered} résidents depuis octobre 2021`}
@@ -973,7 +973,7 @@ export function ObservatoireLogementFrontalierPage() {
               </table>
             </div>
             {/* Verdict + panier — l'encart-clé du tableau (mis en avant, demande Jérôme 07/2026) */}
-            <div className="mt-6 bg-[#D4A574]/10 border border-[#D4A574]/40 rounded-xl p-5 sm:p-7 text-center">
+            <div className="mt-6 bg-[#2F5D50]/10 border border-[#2F5D50]/40 rounded-xl p-5 sm:p-7 text-center">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#A0623C] mb-4">
                 {en ? "The same table, two readings" : "Le même tableau, deux lectures"}
               </p>
@@ -1018,7 +1018,7 @@ export function ObservatoireLogementFrontalierPage() {
                 ).map((item) => (
                   <span
                     key={item}
-                    className="inline-flex items-center gap-1.5 text-sm bg-white border border-[#D4A574]/50 text-[#44403C] rounded-full px-3 py-1.5"
+                    className="inline-flex items-center gap-1.5 text-sm bg-white border border-[#2F5D50]/50 text-[#44403C] rounded-full px-3 py-1.5"
                   >
                     <Check className="w-3.5 h-3.5 text-[#6B8E6B] shrink-0" />
                     {item}
@@ -1046,7 +1046,7 @@ export function ObservatoireLogementFrontalierPage() {
           {/* C — Le résident-type + la tension */}
           <div className="bg-white border border-[#E7E5E4] rounded-xl p-6 sm:p-8">
             <h3 className="text-xl md:text-2xl text-[#1C1917] mb-4 flex items-center gap-2.5">
-              <Users className="w-6 h-6 text-[#D4A574] shrink-0" />
+              <Users className="w-6 h-6 text-lvc-accent shrink-0" />
               {en ? "Who lives in coliving — the typical resident" : "Qui vit en coliving — le résident-type"}
             </h3>
             <p className="text-sm text-[#57534E] leading-relaxed mb-5">
@@ -1090,7 +1090,7 @@ export function ObservatoireLogementFrontalierPage() {
         <div className="max-w-3xl mx-auto px-6">
           <details id="methodo" className="group scroll-mt-24">
             <summary className="flex items-center gap-2 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden text-xl font-medium text-[#1C1917]">
-              <Info className="w-5 h-5 text-[#D4A574] shrink-0" />
+              <Info className="w-5 h-5 text-lvc-accent shrink-0" />
               {en ? "Method & sources" : "Méthodologie & sources"}
               <ChevronDown className="w-4 h-4 text-[#A8A29E] transition-transform group-open:rotate-180" />
               <span className="text-xs font-normal text-[#A8A29E] ml-auto">{en ? "unfold" : "déplier"}</span>
@@ -1225,7 +1225,7 @@ export function ObservatoireLogementFrontalierPage() {
 
           {/* Éditeur + CTA discret — FR → article consolidé (07/07), EN → pilier conservé */}
           <div className="text-center mt-12">
-            <MapPin className="w-6 h-6 text-[#D4A574] mx-auto mb-3" />
+            <MapPin className="w-6 h-6 text-lvc-accent mx-auto mb-3" />
             <p className="text-[#57534E] leading-relaxed mb-6 max-w-2xl mx-auto">
               {en
                 ? "This observatory is published by La Villa Coliving, which runs all-inclusive coliving houses on the French side of Geneva. Want a turnkey room without the apartment hunt?"
@@ -1262,7 +1262,7 @@ function Th({ children, onClick, right, active }: { children: ReactNode; onClick
   return (
     <th
       onClick={onClick}
-      className={`px-3 py-3 cursor-pointer select-none font-medium ${right ? "text-right" : "text-left"} ${active ? "text-[#D4A574]" : "text-[#57534E]"}`}
+      className={`px-3 py-3 cursor-pointer select-none font-medium ${right ? "text-right" : "text-left"} ${active ? "text-lvc-accent" : "text-[#57534E]"}`}
     >
       {children}
     </th>

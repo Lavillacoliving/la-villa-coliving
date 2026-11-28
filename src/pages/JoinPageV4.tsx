@@ -377,8 +377,8 @@ export function JoinPageV4() {
               embarquée dans le prérendu. La constante manuelle AVAILABILITY a été
               supprimée — sans données, le libellé redevient qualitatif, jamais chiffré. */}
           <div className="mb-6 text-center">
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] text-sm text-[#1C1917]">
-              <Calendar className="w-4 h-4 text-[#D4A574]" />
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-lvc-accent text-sm text-[#1C1917]">
+              <Calendar className="w-4 h-4 text-lvc-accent" />
               {shortAvailabilityLabel(availability, L)}
             </span>
           </div>
@@ -443,15 +443,15 @@ export function JoinPageV4() {
           {/* Reassurance strip */}
           <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm text-[#57534E]">
             <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#D4A574]" />
+              <Check className="w-4 h-4 text-lvc-accent" />
               {language === "en" ? "No commitment" : "Sans engagement"}
             </span>
             <span className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-[#D4A574]" />
+              <Shield className="w-4 h-4 text-lvc-accent" />
               {language === "en" ? "Response within 48h" : "Réponse sous 48h"}
             </span>
             <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#D4A574]" />
+              <Check className="w-4 h-4 text-lvc-accent" />
               {language === "en" ? "No application fee" : "Aucun frais de dossier"}
             </span>
           </div>
@@ -464,7 +464,7 @@ export function JoinPageV4() {
 
           {status === "success" ? (
             <div ref={successRef} className="bg-white border border-[#E7E5E4] p-12 md:p-16 text-center scroll-mt-24">
-              <div className="w-16 h-16 bg-[#D4A574] rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-lvc-accent rounded-full flex items-center justify-center mx-auto mb-6">
                 <Check className="w-8 h-8 text-white" strokeWidth={3} />
               </div>
               <h2
@@ -554,7 +554,7 @@ export function JoinPageV4() {
                     name="firstName"
                     required
                     autoComplete="given-name"
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-lvc-accent focus:outline-none transition-colors"
                   />
                 </div>
                 <div>
@@ -566,7 +566,7 @@ export function JoinPageV4() {
                     name="lastName"
                     required
                     autoComplete="family-name"
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-lvc-accent focus:outline-none transition-colors"
                   />
                 </div>
                 <div>
@@ -578,7 +578,7 @@ export function JoinPageV4() {
                     name="email"
                     required
                     autoComplete="email"
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-lvc-accent focus:outline-none transition-colors"
                   />
                 </div>
                 <div>
@@ -591,7 +591,7 @@ export function JoinPageV4() {
                     required
                     autoComplete="tel"
                     aria-describedby="phone-help"
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-lvc-accent focus:outline-none transition-colors"
                   />
                   {/* (Lot A, 01/10/2026) Réassurance toujours visible — pas un placeholder. */}
                   <p id="phone-help" className="mt-2 text-xs text-[#78716C]">
@@ -612,7 +612,7 @@ export function JoinPageV4() {
                       {CONTACT_OPTIONS.map((o) => (
                         <label key={o.value} className="cursor-pointer">
                           <input type="radio" name="contact_preference" value={o.value} className="peer sr-only" />
-                          <span className="inline-flex items-center justify-center min-h-[44px] px-4 border border-[#E7E5E4] text-sm text-[#57534E] transition-colors hover:border-[#D4A574] peer-checked:border-[#D4A574] peer-checked:bg-[#FAF9F6] peer-checked:text-[#1C1917] peer-focus-visible:ring-2 peer-focus-visible:ring-[#D4A574] peer-focus-visible:ring-offset-1">
+                          <span className="inline-flex items-center justify-center min-h-[44px] px-4 border border-[#E7E5E4] text-sm text-[#57534E] transition-colors hover:border-lvc-accent peer-checked:border-lvc-accent peer-checked:bg-[#FAF9F6] peer-checked:text-[#1C1917] peer-focus-visible:ring-2 peer-focus-visible:ring-lvc-ink peer-focus-visible:ring-offset-1">
                             {language === "en" ? o.en : o.fr}
                           </span>
                         </label>
@@ -630,7 +630,7 @@ export function JoinPageV4() {
                     name="source"
                     value={sourceChoice}
                     onChange={(e) => setSourceChoice(e.target.value)}
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-lvc-accent focus:outline-none transition-colors bg-white"
                   >
                     <option value="">
                       {language === "en" ? "Select" : "Sélectionner"}
@@ -681,7 +681,7 @@ export function JoinPageV4() {
                         type="text"
                         name="referrerName"
                         maxLength={80}
-                        className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                        className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-lvc-accent focus:outline-none transition-colors"
                       />
                     </div>
                   )}
@@ -704,7 +704,7 @@ export function JoinPageV4() {
               <p
                 data-offer-line
                 data-offer-id={refOffer}
-                className="mb-4 px-4 py-3 bg-[#FAF9F6] border border-[#D4A574] text-sm text-[#1C1917] text-center"
+                className="mb-4 px-4 py-3 bg-[#FAF9F6] border border-lvc-accent text-sm text-[#1C1917] text-center"
               >
                 {OFFER_TEXTS_BY_ID[refOffer][L].formLine}
               </p>
@@ -765,7 +765,7 @@ export function JoinPageV4() {
                     });
                   } catch { /* noop */ }
                 }}
-                className="text-[#57534E] underline decoration-[#D4A574] underline-offset-4 hover:text-[#1C1917] transition-colors"
+                className="text-[#57534E] underline decoration-lvc-accent underline-offset-4 hover:text-[#1C1917] transition-colors"
               >
                 {language === "en" ? "Prefer to talk first? → WhatsApp" : "Tu préfères discuter d'abord ? → WhatsApp"}
               </a>
@@ -869,7 +869,7 @@ export function JoinPageV4() {
           <div className="container-custom">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
               <div className="flex flex-col items-center">
-                <Users className="w-8 h-8 text-[#D4A574] mb-3" />
+                <Users className="w-8 h-8 text-lvc-accent mb-3" />
                 <p className="text-3xl text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
                   {`${STATS.totalResidents}+`}
                 </p>
@@ -878,7 +878,7 @@ export function JoinPageV4() {
                 </p>
               </div>
               <div className="flex flex-col items-center">
-                <Calendar className="w-8 h-8 text-[#D4A574] mb-3" />
+                <Calendar className="w-8 h-8 text-lvc-accent mb-3" />
                 <p className="text-3xl text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
                   {language === "en" ? `${STATS.averageStayMonths} months` : `${STATS.averageStayMonths} mois`}
                 </p>
@@ -896,7 +896,7 @@ export function JoinPageV4() {
                   href={GOOGLE_REVIEWS.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 text-sm text-[#D4A574] underline underline-offset-4 hover:text-[#1C1917] transition-colors"
+                  className="mt-1 text-sm text-lvc-accent underline underline-offset-4 hover:text-[#1C1917] transition-colors"
                 >
                   {GOOGLE_REVIEWS_LINK_LABEL[L]}
                 </a>

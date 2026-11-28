@@ -161,7 +161,7 @@ export function RoomDetailPage() {
           <h1 className="text-3xl mb-4 text-[#1C1917]">
             {en ? "Room not found" : "Chambre introuvable"}
           </h1>
-          <LocalizedLink to="/chambres-disponibles" className="text-[#B8860B] font-semibold underline underline-offset-4">
+          <LocalizedLink to="/chambres-disponibles" className="text-lvc-accent font-semibold underline underline-offset-4">
             {en ? "See the available rooms" : "Voir les chambres disponibles"}
           </LocalizedLink>
         </div>
@@ -228,7 +228,7 @@ export function RoomDetailPage() {
   const priceCard = (
     <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
       {room?.rent_chf != null && (
-        <p className="text-3xl font-black text-[#D4A574]">
+        <p className="text-3xl font-black text-lvc-accent">
           {en ? `CHF ${thousands(room.rent_chf, ",")}` : `${thousands(room.rent_chf, "\u00a0")} CHF`}
           <span className="text-base font-light text-[#78716C]">{en ? " /month" : " /mois"}</span>
         </p>
@@ -264,7 +264,7 @@ export function RoomDetailPage() {
       <ul className="mt-5 space-y-2">
         {reassurance.map((r) => (
           <li key={r} className="flex items-start gap-2 text-sm text-[#57534E]">
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#B8860B]" />
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-lvc-accent" />
             <span>{r}</span>
           </li>
         ))}
@@ -306,7 +306,7 @@ export function RoomDetailPage() {
         )}
         <p className="text-[#57534E]">
           {en ? "Looking at other houses too? " : "Tu regardes aussi les autres maisons ? "}
-          <LocalizedLink to="/chambres-disponibles" className="font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]">
+          <LocalizedLink to="/chambres-disponibles" className="font-semibold text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent">
             {en ? "See every available room" : "Voir toutes les chambres disponibles"}
           </LocalizedLink>
         </p>
@@ -487,7 +487,7 @@ export function RoomDetailPage() {
               <dl className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {specs.map(({ icon: Icon, label, value }) => (
                   <div key={label} className="flex items-start gap-3 rounded-xl border border-[#E7E5E4] px-4 py-3">
-                    <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#B8860B]" aria-hidden="true" />
+                    <Icon className="mt-0.5 h-5 w-5 shrink-0 text-lvc-accent" aria-hidden="true" />
                     <div>
                       <dt className="text-xs uppercase tracking-wider text-[#78716C]">{label}</dt>
                       <dd className="text-[#1C1917] font-semibold">{value}</dd>
@@ -502,7 +502,7 @@ export function RoomDetailPage() {
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {included.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[#44403C]">
-                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#B8860B]" />
+                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-lvc-accent" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -531,12 +531,12 @@ export function RoomDetailPage() {
               <ul className="mt-3 space-y-1.5">
                 {facts.commute[L].split(" · ").map((c) => (
                   <li key={c} className="flex items-start gap-2 text-[#44403C]">
-                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#B8860B]" aria-hidden="true" />
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-lvc-accent" aria-hidden="true" />
                     <span>{c.charAt(0).toUpperCase() + c.slice(1)}</span>
                   </li>
                 ))}
               </ul>
-              <LocalizedLink to={`/${house}`} className="mt-5 inline-flex items-center gap-2 font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]">
+              <LocalizedLink to={`/${house}`} className="mt-5 inline-flex items-center gap-2 font-semibold text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent">
                 {en ? `Discover ${houseLabel}` : `Découvrir ${houseLabel}`}
                 <ArrowRight className="w-4 h-4" />
               </LocalizedLink>

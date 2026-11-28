@@ -58,7 +58,7 @@ export function AppartIncluded({ lang, headingLevel = 2, className = "" }: Appar
                   {r.detailLink && r.detail.endsWith(r.detailLink.text) ? (
                     <>
                       {r.detail.slice(0, r.detail.length - r.detailLink.text.length)}
-                      <LocalizedLink to={r.detailLink.href} className="underline underline-offset-4 text-[#1C1917] hover:text-[#b8860b] transition-colors">
+                      <LocalizedLink to={r.detailLink.href} className="underline underline-offset-4 text-[#1C1917] hover:text-lvc-accent transition-colors">
                         {r.detailLink.text}
                       </LocalizedLink>
                     </>

@@ -1562,7 +1562,7 @@ export function HouseDetailPage() {
           <h1 className="text-4xl mb-4 text-[#1C1917]">House not found</h1>
           <LocalizedLink
             to="/nos-maisons"
-            className="text-[#D4A574] hover:underline font-bold"
+            className="text-lvc-accent hover:underline font-bold"
           >
             View all houses
           </LocalizedLink>
@@ -1704,11 +1704,11 @@ export function HouseDetailPage() {
             </h1>
             <div className="flex flex-wrap items-center gap-6 text-white/90 font-medium">
               <span className="flex items-center gap-2">
-                <MapPin size={18} className="text-[#D4A574]" />
+                <MapPin size={18} className="text-lvc-accent" />
                 {house.location}
               </span>
               <span className="flex items-center gap-2">
-                <Users size={18} className="text-[#D4A574]" />
+                <Users size={18} className="text-lvc-accent" />
                 {house.capacity}
               </span>
               <span className="flex items-center gap-2">
@@ -1875,7 +1875,7 @@ export function HouseDetailPage() {
                   </div>
                   <div className="p-8">
                     <div className="flex items-center gap-3 mb-4">
-                      <BedDouble className="text-[#D4A574]" size={28} />
+                      <BedDouble className="text-lvc-accent" size={28} />
                       <h3 className="text-xl text-[#1C1917]">
                         {room.type}
                       </h3>
@@ -1884,7 +1884,7 @@ export function HouseDetailPage() {
                       {room.description}
                     </p>
                     <div className="flex items-center justify-between">
-                      <p className="text-2xl font-black text-[#D4A574]">
+                      <p className="text-2xl font-black text-lvc-accent">
                         {room.price}
                         {"priceEur" in room && (
                           <span className="text-base font-light text-[#78716C]"> ({(room as { priceEur: string }).priceEur})</span>
@@ -1934,9 +1934,9 @@ export function HouseDetailPage() {
               </h2>
               {/* flex + gap (et non space-y) : space-y annulerait la marge basse md:mb-12 des volets à partir de md. */}
               <div className="flex flex-col gap-2 md:block">
-                <IncludedGroup panelId="inclus-caracteristiques" title={t.houseDetail.features} items={house.features} icon={Check} iconClass="text-[#D4A574]" onToggle={(o) => trackFold("included_features", o)} />
-                <IncludedGroup panelId="inclus-services" title={t.houseDetail.services} items={house.services} icon={Check} iconClass="text-[#D4A574]" onToggle={(o) => trackFold("included_services", o)} />
-                <IncludedGroup panelId="inclus-communaute" title={t.houseDetail.community} items={house.community} icon={Star} iconClass="text-[#D4A574]" onToggle={(o) => trackFold("included_community", o)} />
+                <IncludedGroup panelId="inclus-caracteristiques" title={t.houseDetail.features} items={house.features} icon={Check} iconClass="text-lvc-accent" onToggle={(o) => trackFold("included_features", o)} />
+                <IncludedGroup panelId="inclus-services" title={t.houseDetail.services} items={house.services} icon={Check} iconClass="text-lvc-accent" onToggle={(o) => trackFold("included_services", o)} />
+                <IncludedGroup panelId="inclus-communaute" title={t.houseDetail.community} items={house.community} icon={Star} iconClass="text-lvc-accent" onToggle={(o) => trackFold("included_community", o)} />
                 <IncludedGroup panelId="inclus-mode-de-vie" title={t.houseDetail.lifestyle} items={house.lifestyle} icon={Sun} iconClass="text-[#78716C]" last onToggle={(o) => trackFold("included_lifestyle", o)} />
               </div>
             </div>
@@ -1952,7 +1952,7 @@ export function HouseDetailPage() {
                       ? (language === "en" ? "From" : "À partir de")
                       : (language === "en" ? "Monthly rent" : "Loyer mensuel")}
                   </p>
-                  <p className="text-4xl font-black text-[#D4A574] mb-2">
+                  <p className="text-4xl font-black text-lvc-accent mb-2">
                     {id === "lavilla"
                       ? (language === "en" ? PRICE_FROM_EN_NUM : PRICE_FROM_FR_NUM)
                       : house.price}{" "}
@@ -2005,7 +2005,7 @@ export function HouseDetailPage() {
                       href="https://wa.me/33664315134"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full text-center text-sm text-[#78716C] hover:text-[#D4A574] transition-colors"
+                      className="w-full text-center text-sm text-[#78716C] hover:text-lvc-accent transition-colors"
                     >
                       {language === "en"
                         ? "Or ask us on WhatsApp →"
@@ -2021,14 +2021,14 @@ export function HouseDetailPage() {
                   </h4>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 text-[#57534E]">
-                      <Clock size={18} className="text-[#D4A574]" />
+                      <Clock size={18} className="text-lvc-accent" />
                       {/* (Lot L2, 09/10/2026, D1) Libellé de marque unique, toujours qualifié : STATS_DISPLAY.distance. */}
                       <span className="text-sm">
                         {STATS_DISPLAY[language === "en" ? "en" : "fr"].distance}
                       </span>
                     </div>
                     <div className="flex items-center gap-3 text-[#57534E]">
-                      <Wifi size={18} className="text-[#D4A574]" />
+                      <Wifi size={18} className="text-lvc-accent" />
                       {/* (24/11/2026, lot 3 du brief « budget réel ») Opérateur nommé ; parking compris (au Lodge, sans place attribuée). */}
                       <span className="text-sm">{capitalize(inclusPhrases(language === "en" ? "en" : "fr").fibreSpeed)}</span>
                     </div>
@@ -2041,7 +2041,7 @@ export function HouseDetailPage() {
                       </span>
                     </div>
                     <div className="flex items-center gap-3 text-[#57534E]">
-                      <Coffee size={18} className="text-[#D4A574]" />
+                      <Coffee size={18} className="text-lvc-accent" />
                       <span className="text-sm">{language === "en" ? "All-inclusive" : "Tout inclus"}</span>
                     </div>
                   </div>
@@ -2060,7 +2060,7 @@ export function HouseDetailPage() {
                       >
                         <TreePine
                           size={18}
-                          className="text-[#D4A574] mt-0.5 flex-shrink-0"
+                          className="text-lvc-accent mt-0.5 flex-shrink-0"
                         />
                         <span className="text-sm">{item}</span>
                       </div>
@@ -2114,14 +2114,14 @@ export function HouseDetailPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <div>
                   <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
-                    <MapPin size={20} className="text-[#D4A574]" />
+                    <MapPin size={20} className="text-lvc-accent" />
                     {language === "en" ? "Neighbourhood" : "Quartier"}
                   </h3>
                   <p className="text-[#57534E] mb-1">{data.address}</p>
                   <p className="text-sm text-[#78716C] mb-6">{houseExactAddressNote(language === "en" ? "en" : "fr")}</p>
 
                   <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
-                    <Clock size={20} className="text-[#D4A574]" />
+                    <Clock size={20} className="text-lvc-accent" />
                     {language === "en" ? "Transport & travel times" : "Transport & temps de trajet"}
                   </h3>
                   {/* (Lot L2) Tableau commun à pied / Léman Express / tram 17 / vélo + note de méthode + « Calculer mon trajet ». */}
@@ -2161,13 +2161,13 @@ export function HouseDetailPage() {
 
                 <div>
                   <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
-                    <Coffee size={20} className="text-[#D4A574]" />
+                    <Coffee size={20} className="text-lvc-accent" />
                     {language === "en" ? "Nearby shops & services" : "Commerces & services à proximité"}
                   </h3>
                   <ul className="space-y-2">
                     {data.nearby.map((line, i) => (
                       <li key={i} className="flex items-start gap-2 text-[#57534E] font-medium">
-                        <Check className="text-[#D4A574] mt-1 flex-shrink-0" size={16} />
+                        <Check className="text-lvc-accent mt-1 flex-shrink-0" size={16} />
                         <span>{line}</span>
                       </li>
                     ))}
@@ -2444,7 +2444,7 @@ export function HouseDetailPage() {
                       aria-expanded={faqOpen}
                       aria-controls="faq-suite"
                       onClick={() => { trackFold("faq_more", !faqOpen); setFaqOpen((v) => !v); }}
-                      className="mt-4 md:mt-6 w-full flex items-center justify-between gap-3 px-5 py-4 md:px-6 bg-white border border-[#E7E5E4] rounded-2xl text-left font-bold text-[#1C1917] hover:border-[#D4A574] transition-colors"
+                      className="mt-4 md:mt-6 w-full flex items-center justify-between gap-3 px-5 py-4 md:px-6 bg-white border border-[#E7E5E4] rounded-2xl text-left font-bold text-[#1C1917] hover:border-lvc-accent transition-colors"
                     >
                       {language === "en"
                         ? `See the ${faqs.length - FAQ_VISIBLE} other questions`
@@ -2508,7 +2508,7 @@ export function HouseDetailPage() {
                     <div className="flex-1 min-w-0 flex items-center justify-between gap-3 pr-2 md:p-6">
                       <div>
                         <h3
-                          className="text-xl text-[#1C1917] mb-1 group-hover:text-[#D4A574] transition-colors"
+                          className="text-xl text-[#1C1917] mb-1 group-hover:text-lvc-accent transition-colors"
                         >
                           {other.name}
                         </h3>
@@ -2516,7 +2516,7 @@ export function HouseDetailPage() {
                           {other.location} · {other.capacity}
                         </p>
                       </div>
-                      <ArrowRight className="w-5 h-5 text-[#D4A574] group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-5 h-5 text-lvc-accent group-hover:translate-x-1 transition-transform" />
                     </div>
                   </LocalizedLink>
                 );
@@ -2528,7 +2528,7 @@ export function HouseDetailPage() {
       {/* CTA Section */}
       <section className="py-14 md:py-20 relative bg-[#1C1917] overflow-hidden">
         <div className="absolute top-10 left-10 w-32 h-32 bg-white/15 blob hidden lg:block" />
-        <div className="absolute bottom-10 right-10 w-24 h-24 bg-[#D4A574]/40 blob-reverse hidden lg:block" />
+        <div className="absolute bottom-10 right-10 w-24 h-24 bg-[#E0BB8A]/40 blob-reverse hidden lg:block" />
 
         <div className="container-custom relative text-center">
           <h2

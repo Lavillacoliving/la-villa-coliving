@@ -104,7 +104,7 @@ export function BlogPage() {
           <div className="max-w-2xl mx-auto relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#78716C]" />
             <input type="text" placeholder={language==="en"?"Search articles...":"Rechercher des articles..."} value={sq} onChange={(e)=>setSq(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors text-[#1C1917]" />
+              className="w-full pl-12 pr-4 py-4 border border-[#E7E5E4] focus:border-lvc-accent focus:outline-none transition-colors text-[#1C1917]" />
           </div>
         </div>
       </section>
@@ -113,7 +113,7 @@ export function BlogPage() {
           <div className="flex flex-wrap gap-3 mb-12 justify-center">
             {cats.map((k)=>(
               <button key={k} onClick={()=>setAc(k)}
-                className={`px-6 py-3 text-sm font-medium transition-all border ${ac===k?"border-[#D4A574] bg-[#D4A574] text-white":"border-[#E7E5E4] bg-white text-[#57534E] hover:border-[#1C1917] hover:text-[#1C1917]"}`}>
+                className={`px-6 py-3 text-sm font-medium transition-all border ${ac===k?"border-lvc-ink bg-lvc-ink text-white":"border-[#E7E5E4] bg-white text-[#57534E] hover:border-[#1C1917] hover:text-[#1C1917]"}`}>
                 {CL[k][language]||k}
               </button>
             ))}
@@ -125,7 +125,7 @@ export function BlogPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {fp.map((post)=>(
-                <LocalizedLink to={`/blog/${post.slug}`} key={post.id} className="group bg-white border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#D4A574]/30 hover:shadow-lg">
+                <LocalizedLink to={`/blog/${post.slug}`} key={post.id} className="group bg-white border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#2F5D50]/30 hover:shadow-lg">
                   <div className="aspect-[16/10] overflow-hidden bg-[#F5F2ED]">
                     {post.image_url ? (
                       <img src={post.image_url} alt={gT(post)} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
@@ -134,10 +134,10 @@ export function BlogPage() {
                     )}
                   </div>
                   <div className="p-6">
-                    <span className="inline-block text-xs uppercase tracking-widest text-[#D4A574] font-medium mb-3">
+                    <span className="inline-block text-xs uppercase tracking-widest text-lvc-accent font-medium mb-3">
                       {CL[post.category]?.[language]||post.category}
                     </span>
-                    <h3 className="text-xl text-[#1C1917] mb-3 line-clamp-2 group-hover:text-[#D4A574] transition-colors">
+                    <h3 className="text-xl text-[#1C1917] mb-3 line-clamp-2 group-hover:text-lvc-accent transition-colors">
                       {typoFr(gT(post))}
                     </h3>
                     <p className="text-[#57534E] text-sm leading-relaxed mb-4 line-clamp-3">{typoFr(gE(post))}</p>

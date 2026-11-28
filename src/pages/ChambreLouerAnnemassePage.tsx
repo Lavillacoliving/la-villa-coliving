@@ -189,8 +189,8 @@ export function ChambreLouerAnnemassePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-[#1C1917] text-white p-8 md:col-span-2">
-              <BedDouble className="w-10 h-10 text-[#D4A574] mb-4" />
-              <p className="text-2xl font-bold text-[#D4A574] mb-4">
+              <BedDouble className="w-10 h-10 text-[#E0BB8A] mb-4" />
+              <p className="text-2xl font-bold text-[#E0BB8A] mb-4">
                 {language === "en" ? `${PRICE_CHF_EN}/month — all inclusive, private shower room` : `${PRICE_CHF_FR}/mois — tout inclus, salle d'eau privative`}
               </p>
               <p className="text-sm text-white/80 leading-relaxed mb-6">
@@ -199,16 +199,16 @@ export function ChambreLouerAnnemassePage() {
                   : "Un seul prix pour les 12 chambres du Lodge, chacune avec sa salle d'eau. Le montant est le coût mensuel total : loyer, charges, fibre, parking sans place attribuée, ménage des communs, espaces communs et événements. Rien ne s'ajoute en fin de mois."}
               </p>
               <ul className="space-y-2 text-sm text-white/80">
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Designer furniture, private shower room" : "Mobilier design, salle d'eau privative"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {capitalFirst(IP.fibreSpeed)}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "On-site parking, no allocated space" : "Parking sur place, sans place attribuée"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Bills included" : "Charges comprises"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Housekeeping 3×/week" : "Ménage 3×/semaine"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Sauna, gym, pool and garden" : "Sauna, salle de sport, piscine et jardin"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#E0BB8A] mt-0.5 flex-shrink-0" /> {language === "en" ? "Designer furniture, private shower room" : "Mobilier design, salle d'eau privative"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#E0BB8A] mt-0.5 flex-shrink-0" /> {capitalFirst(IP.fibreSpeed)}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#E0BB8A] mt-0.5 flex-shrink-0" /> {language === "en" ? "On-site parking, no allocated space" : "Parking sur place, sans place attribuée"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#E0BB8A] mt-0.5 flex-shrink-0" /> {language === "en" ? "Bills included" : "Charges comprises"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#E0BB8A] mt-0.5 flex-shrink-0" /> {language === "en" ? "Housekeeping 3×/week" : "Ménage 3×/semaine"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#E0BB8A] mt-0.5 flex-shrink-0" /> {language === "en" ? "Sauna, gym, pool and garden" : "Sauna, salle de sport, piscine et jardin"}</li>
               </ul>
             </div>
             <div className="bg-[#FAF9F6] p-8">
-              <Sparkles className="w-10 h-10 text-[#D4A574] mb-4" />
+              <Sparkles className="w-10 h-10 text-lvc-accent mb-4" />
               <h3 className="text-xl text-[#1C1917] mb-2">
                 {language === "en" ? "What about a classic studio in Annemasse?" : "Et un studio classique à Annemasse ?"}
               </h3>
@@ -274,7 +274,7 @@ export function ChambreLouerAnnemassePage() {
                 ]
             ).map((item, i) => (
               <div key={i} className="flex items-start gap-3">
-                <Check className="text-[#D4A574] mt-1 flex-shrink-0" size={20} />
+                <Check className="text-lvc-accent mt-1 flex-shrink-0" size={20} />
                 <span className="text-[#57534E] font-medium">{item}</span>
               </div>
             ))}
@@ -286,7 +286,7 @@ export function ChambreLouerAnnemassePage() {
           depuis la source unique ; H2 renommé le 09/10/2026) ===== */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
+          <Train className="w-12 h-12 text-lvc-accent mx-auto mb-6" />
           <h2
             className="text-3xl md:text-4xl text-[#1C1917] mb-6 text-center"
           >
@@ -309,7 +309,7 @@ export function ChambreLouerAnnemassePage() {
           <div className="text-center">
             <LocalizedLink
               to="/annemasse-colocation"
-              className="inline-flex items-center gap-2 mt-8 text-[#D4A574] font-medium hover:underline"
+              className="inline-flex items-center gap-2 mt-8 text-lvc-accent font-medium hover:underline"
             >
               {language === "en" ? "See the full Annemasse guide" : "Voir le guide complet d'Annemasse"}
               <ArrowRight className="w-4 h-4" />
@@ -390,7 +390,7 @@ export function ChambreLouerAnnemassePage() {
       {/* ===== CTA ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <Calendar className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
+          <Calendar className="w-12 h-12 text-[#E0BB8A] mx-auto mb-6" />
           <h2
             className="text-3xl md:text-4xl text-white mb-6"
           >
@@ -421,37 +421,37 @@ export function ChambreLouerAnnemassePage() {
             {language === "en" ? "Related pages" : "Pages liées"}
           </p>
           <div className="flex flex-wrap gap-4 justify-center text-sm">
-            <LocalizedLink to="/annemasse-colocation" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/annemasse-colocation" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "The guide to life in Annemasse" : "Le guide de la vie à Annemasse"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             {/* (Lot 4 SEO funnel) Ancre exacte vers la home, URL championne sur « coliving genève ». */}
-            <LocalizedLink to="/" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "Coliving Geneva" : "Coliving Genève"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             {/* (Lot 6 SEO funnel) Page sœur côté Genève. */}
-            <LocalizedLink to="/chambre-a-louer-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/chambre-a-louer-geneve" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "See all the rooms" : "Voir toutes les chambres"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/nos-maisons" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/nos-maisons" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "Our 3 houses" : "Nos 3 maisons"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/lelodge" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/lelodge" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "Le Lodge — 12 rooms Annemasse" : "Le Lodge — 12 chambres Annemasse"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/tarifs" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/tarifs" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "Pricing" : "Tarifs"}
             </LocalizedLink>
           </div>
-          <Euro className="w-5 h-5 text-[#D4A574]/40 mx-auto mt-6" />
+          <Euro className="w-5 h-5 text-[#2F5D50]/40 mx-auto mt-6" />
         </div>
       </section>
       <WhatsAppButton context={language === "en" ? "Rooms for rent Annemasse" : "Chambre à louer Annemasse"} />

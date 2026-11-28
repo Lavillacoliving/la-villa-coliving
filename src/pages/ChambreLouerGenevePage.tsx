@@ -65,7 +65,7 @@ export function ChambreLouerGenevePage() {
   // (13/11/2026) Lien « Ce que comprend le prix » des cartes : événement price_why_click, distinct de cta_click.
   const trackPriceWhy = (room: PlaceRoom, variant: PriceWhyVariant) =>
     trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "chambre_a_louer_geneve", language: L });
-  const link = "text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]";
+  const link = "text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent";
   const h2 = "text-3xl md:text-4xl text-[#1C1917] mb-6";
 
   return (
@@ -183,8 +183,8 @@ export function ChambreLouerGenevePage() {
             <LocalizedLink to="/observatoire-logement-frontalier-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">{en ? "our cross-border housing Observatory, Geneva and the Léman Express axis (June 2026)" : "notre Observatoire du logement frontalier, Genève et l'axe Léman Express (juin 2026)"}</LocalizedLink>
           </p>
           <div className="bg-white border border-[#E7E5E4] p-6 md:p-8 mb-6">
-            <BedDouble className="w-8 h-8 text-[#D4A574] mb-3" />
-            <p className="text-2xl font-bold text-[#D4A574] mb-3">{en ? `From ${PRICE_FROM_CHF_EN}/month, total monthly cost` : `Dès ${PRICE_FROM_CHF_FR}/mois, coût mensuel total`}</p>
+            <BedDouble className="w-8 h-8 text-lvc-accent mb-3" />
+            <p className="text-2xl font-bold text-lvc-accent mb-3">{en ? `From ${PRICE_FROM_CHF_EN}/month, total monthly cost` : `Dès ${PRICE_FROM_CHF_FR}/mois, coût mensuel total`}</p>
             <p className="text-[#57534E] leading-relaxed mb-4">
               {en
                 ? `${sharedBathPricesText("en")} for a room whose shower room is shared with one other room, ${PRICE_CHF_EN} with a private shower room. Compare total cost with total cost, in CHF on both sides: here nothing is added at the end of the month.`
@@ -194,7 +194,7 @@ export function ChambreLouerGenevePage() {
               {(en
                 ? [`Furnished room, ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`, `Bills, water, heating, ${IP.fibreSpeed}`, "On-site parking", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "No agency fee, no application fee", `Deposit: ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application`]
                 : [`Chambre meublée, ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`, `Charges, eau, chauffage, ${IP.fibreSpeed}`, "Parking sur place", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "0 frais d'agence, 0 frais de dossier", `Caution : ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier`]
-              ).map((item) => <li key={item} className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" />{item}</li>)}
+              ).map((item) => <li key={item} className="flex items-start gap-2"><Check className="w-4 h-4 text-lvc-accent mt-0.5 flex-shrink-0" />{item}</li>)}
             </ul>
           </div>
           <p className="text-[#57534E]"><LocalizedLink to="/tarifs" className={link}>{en ? "See what the rent includes" : "Voir le détail des tarifs"}</LocalizedLink></p>
@@ -236,7 +236,7 @@ export function ChambreLouerGenevePage() {
               : [["Chez l'habitant", "Tu vis dans le logement du propriétaire, selon ses règles, souvent sans vrai bail. Bien pour quelques semaines ; difficile d'en faire un chez-toi."], ["Sous-location", "Ton droit d'occuper dépend du bail de quelqu'un d'autre. Charges en plus, aucune garantie de durée, et le locataire principal entre toi et le propriétaire."], ["Coliving chez La Villa", "Un bail direct, meublé, à ton nom, un seul loyer tout compris, une maison entière partagée avec des gens qui travaillent à Genève, et pas de propriétaire sur place."]]
             ).map(([t, d]) => (
               <div key={t} className={`p-6 ${t.includes("Villa") ? "bg-[#1C1917] text-white" : "bg-white border border-[#E7E5E4]"}`}>
-                <Sparkles className={`w-6 h-6 mb-3 ${t.includes("Villa") ? "text-[#D4A574]" : "text-[#78716C]"}`} />
+                <Sparkles className={`w-6 h-6 mb-3 ${t.includes("Villa") ? "text-[#E0BB8A]" : "text-[#78716C]"}`} />
                 <h3 className="text-lg mb-2">{t}</h3>
                 <p className={`text-sm leading-relaxed ${t.includes("Villa") ? "text-white/80" : "text-[#57534E]"}`}>{d}</p>
               </div>
@@ -293,7 +293,7 @@ export function ChambreLouerGenevePage() {
                   <h3 className="text-xl text-[#1C1917]">{HOUSES[k].label}</h3>
                   <p className="text-sm text-[#78716C]">{en ? HOUSES[k].descEn : HOUSES[k].descFr}</p>
                   <HouseAvailabilityLine house={k} />
-                  <LocalizedLink to={`/${k}`} className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-[#1C1917] hover:text-[#D4A574]">
+                  <LocalizedLink to={`/${k}`} className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-[#1C1917] hover:text-lvc-accent">
                     {en ? `Discover ${HOUSES[k].label}` : `Découvrir ${HOUSES[k].label}`}<ArrowRight className="w-4 h-4" />
                   </LocalizedLink>
                 </div>
@@ -312,7 +312,7 @@ export function ChambreLouerGenevePage() {
       {/* ===== H2 — À N MIN DE GENÈVE ===== */}
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
+          <Train className="w-12 h-12 text-lvc-accent mx-auto mb-6" />
           {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES.
               (Lot L2) Deux ancres seulement — Léman Express depuis la gare d'Annemasse, tram 17 depuis Ambilly (D7) ; ni bus,
               ni « quelques minutes » de frontière (D6 : Le Lodge n'a aucune promesse de frontière). */}
@@ -335,7 +335,7 @@ export function ChambreLouerGenevePage() {
       {/* ===== CTA ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <Calendar className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
+          <Calendar className="w-12 h-12 text-[#E0BB8A] mx-auto mb-6" />
           <h2 className="text-3xl md:text-4xl text-white mb-6">{en ? "See the rooms available right now" : "Voir les chambres disponibles maintenant"}</h2>
           {/* (L'Appart, E4, S11.6) Les chambres de la marque (33 : ENTITY_FACTS.brand). */}
           <p className="text-lg text-white/80 mb-10 leading-relaxed">

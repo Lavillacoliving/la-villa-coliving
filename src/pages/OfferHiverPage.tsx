@@ -344,7 +344,7 @@ function CheckList({ items, className = "space-y-3" }: { items: string[]; classN
     <ul className={className}>
       {items.map((line) => (
         <li key={line} className="flex items-start gap-3 text-[#44403C]">
-          <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#b8860b]" />
+          <Check className="mt-0.5 h-5 w-5 shrink-0 text-lvc-accent" />
           <span>{line}</span>
         </li>
       ))}
@@ -369,7 +369,7 @@ function IncludedSection({ en }: { en: boolean }) {
         <ul className="grid gap-3 sm:grid-cols-2">
           {includedItems(en).map((item) => (
             <li key={item} className="flex items-start gap-3 rounded-xl border border-[#E7E5E4] bg-white px-4 py-3">
-              <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#b8860b]" />
+              <Check className="mt-0.5 h-5 w-5 shrink-0 text-lvc-accent" />
               <span className="text-sm text-[#44403C]">{item}</span>
             </li>
           ))}
@@ -476,13 +476,13 @@ function OfferEnded({ en, L }: { en: boolean; L: "fr" | "en" }) {
           <ul className="space-y-3 text-[#44403C] leading-relaxed">
             {stays.map((item) => (
               <li key={item} className="flex items-start gap-3">
-                <Check className="mt-1 h-5 w-5 shrink-0 text-[#b8860b]" aria-hidden="true" />
+                <Check className="mt-1 h-5 w-5 shrink-0 text-lvc-accent" aria-hidden="true" />
                 <span>{item}</span>
               </li>
             ))}
           </ul>
           <p className="mt-8 text-center">
-            <LocalizedLink to="/faq" className="text-[#b8860b] underline underline-offset-4 hover:text-[#1C1917]">
+            <LocalizedLink to="/faq" className="text-lvc-accent underline underline-offset-4 hover:text-[#1C1917]">
               {en ? "Read the FAQ" : "Lire la FAQ"}
             </LocalizedLink>
           </p>
@@ -578,8 +578,8 @@ function OfferActive({
               ? `Sign by ${endLabel}: half of your first month is on us. Your rent stays the same.`
               : `Signe d'ici le ${endLabel} : la moitié de ton premier mois est offerte. Ton loyer, lui, ne change pas.`}
           </p>
-          <p className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] rounded-full text-xs sm:text-sm font-semibold text-[#1C1917]">
-            <span className="w-2 h-2 bg-[#B8860B] rounded-full shrink-0" aria-hidden="true" />
+          <p className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-lvc-accent rounded-full text-xs sm:text-sm font-semibold text-[#1C1917]">
+            <span className="w-2 h-2 bg-lvc-accent rounded-full shrink-0" aria-hidden="true" />
             {en ? `Offer valid for any lease signed by ${endLabel}` : `Offre valable pour tout bail signé jusqu'au ${endLabel}`}
           </p>
           {roomsCount > 0 && (
@@ -865,8 +865,8 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
           <p data-offer-chf className="mb-4 text-sm text-[#78716C]">{chfLine}</p>
           <p className="text-base md:text-lg text-[#44403C] mb-3">{subtitle}</p>
           <OfferProductLine en={en} rooms={rooms} className="text-base md:text-lg text-[#1C1917] mb-5" />
-          <p data-offer-deadline className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] rounded-2xl text-xs sm:text-sm font-semibold text-[#1C1917] text-left sm:text-center">
-            <span className="w-2 h-2 bg-[#B8860B] rounded-full shrink-0" aria-hidden="true" />
+          <p data-offer-deadline className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-lvc-accent rounded-2xl text-xs sm:text-sm font-semibold text-[#1C1917] text-left sm:text-center">
+            <span className="w-2 h-2 bg-lvc-accent rounded-full shrink-0" aria-hidden="true" />
             <span>{deadline}</span>
           </p>
           {roomsCount > 0 && (

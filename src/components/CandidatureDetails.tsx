@@ -35,7 +35,7 @@ const DURATION_OPTIONS: Array<{ value: string; fr: string; en: string }> = [
 ];
 
 const SELECT_CLASS =
-  "w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white";
+  "w-full px-4 py-3 border border-[#E7E5E4] focus:border-lvc-accent focus:outline-none transition-colors bg-white";
 
 export interface CandidatureDetailsProps {
   token: string;
@@ -147,7 +147,7 @@ export function CandidatureDetails({ token, language, arrivalKnown, endpoint, an
   if (status === "done") {
     return (
       <div ref={rootRef} className="mt-8 pt-8 border-t border-[#E7E5E4] text-sm text-[#57534E] flex items-center justify-center gap-2" role="status">
-        <Check className="w-4 h-4 text-[#D4A574]" />
+        <Check className="w-4 h-4 text-lvc-accent" />
         {en ? "Thanks, noted — see you soon." : "Merci, c'est noté — à très vite."}
       </div>
     );

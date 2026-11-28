@@ -82,7 +82,7 @@ export function FaqSection({
                   <p className="mt-3">
                     <LocalizedLink
                       to={item.more.href}
-                      className="text-[#b8860b] underline underline-offset-4 hover:text-[#1C1917]"
+                      className="text-lvc-accent underline underline-offset-4 hover:text-[#1C1917]"
                     >
                       {item.more.label} →
                     </LocalizedLink>

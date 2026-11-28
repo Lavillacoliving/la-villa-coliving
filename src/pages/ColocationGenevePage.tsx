@@ -115,7 +115,7 @@ export function ColocationGenevePage() {
   };
   const lastUpdatedLabel = formatLongDate(lastUpdatedIso, L);
   const h2 = "text-3xl md:text-4xl text-[#1C1917] mb-6";
-  const link = "text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]";
+  const link = "text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent";
 
   return (
     <main className="relative pt-16">
@@ -252,7 +252,7 @@ export function ColocationGenevePage() {
             <LocalizedLink to="/observatoire-logement-frontalier-geneve" className={link}>{en ? "our cross-border housing Observatory, Geneva and the Léman Express axis (June 2026)" : "notre Observatoire du logement frontalier, Genève et l'axe Léman Express (juin 2026)"}</LocalizedLink>
           </p>
           <div className="bg-white border border-[#E7E5E4] p-6 md:p-8 mb-6">
-            <p className="text-2xl font-bold text-[#D4A574] mb-3">
+            <p className="text-2xl font-bold text-lvc-accent mb-3">
               {en ? `From ${PRICE_FROM_CHF_EN}/month all inclusive at La Villa` : `Dès ${PRICE_FROM_CHF_FR}/mois tout inclus chez La Villa`}
             </p>
             <p className="text-[#57534E] leading-relaxed mb-4">
@@ -264,7 +264,7 @@ export function ColocationGenevePage() {
               {(en
                 ? [`Furnished room, ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`, `Utilities, water, heating, ${IP.fibreSpeed}`, "On-site parking", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "Yoga, events, community", "No agency fee, no application fee"]
                 : [`Chambre meublée, ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`, `Charges, eau, chauffage, ${IP.fibreSpeed}`, "Parking sur place", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "Yoga, événements, communauté", "0 frais d'agence, 0 frais de dossier"]
-              ).map((item) => <li key={item} className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" />{item}</li>)}
+              ).map((item) => <li key={item} className="flex items-start gap-2"><Check className="w-4 h-4 text-lvc-accent mt-0.5 flex-shrink-0" />{item}</li>)}
             </ul>
           </div>
           <p className="text-[#57534E] leading-relaxed">
@@ -330,7 +330,7 @@ export function ColocationGenevePage() {
                   <h3 className="text-xl text-[#1C1917]">{HOUSES[k].label}</h3>
                   <p className="text-sm text-[#78716C]">{en ? HOUSES[k].descEn : HOUSES[k].descFr}</p>
                   <HouseAvailabilityLine house={k} />
-                  <LocalizedLink to={`/${k}`} className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-[#1C1917] hover:text-[#D4A574]">
+                  <LocalizedLink to={`/${k}`} className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-[#1C1917] hover:text-lvc-accent">
                     {en ? `Discover ${HOUSES[k].label}` : `Découvrir ${HOUSES[k].label}`}
                     <ArrowRight className="w-4 h-4" />
                   </LocalizedLink>
@@ -344,7 +344,7 @@ export function ColocationGenevePage() {
       {/* ===== H2 — À N MIN DE GENÈVE ===== */}
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
+          <Train className="w-12 h-12 text-lvc-accent mx-auto mb-6" />
           {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES.
               (Lot L2) Deux ancres seulement — Léman Express depuis la gare d'Annemasse, tram 17 depuis Ambilly (D7) ; ni bus,
               ni « quelques minutes » de frontière (D6 : Le Lodge n'a aucune promesse de frontière). */}

@@ -37,7 +37,7 @@ function track(event: string, params: Record<string, unknown>): void {
 const EYEBROW = "lvc-eyebrow";
 const H2 = "lvc-display text-[30px] md:text-[42px] leading-[1.1] text-lvc-ink mt-3 mb-6 md:mb-10";
 const TEXT_LINK =
-  "inline-flex items-center gap-1.5 font-semibold text-[#44403C] underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors";
+  "inline-flex items-center gap-1.5 font-semibold text-[#44403C] underline decoration-lvc-accent decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors";
 // Bouton principal unique (D8) : doré, texte encre, rayon 12 px, casse normale.
 const PRIMARY_BUTTON = "lvc-btn-primary px-8 py-4 text-base";
 

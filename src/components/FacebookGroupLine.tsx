@@ -35,7 +35,7 @@ export function FacebookGroupLine({ position, className = "" }: FacebookGroupLin
         target="_blank"
         rel="noopener"
         onClick={track}
-        className="whitespace-nowrap font-medium text-[#1C1917] underline underline-offset-4 hover:text-[#b8860b] transition-colors"
+        className="whitespace-nowrap font-medium text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent transition-colors"
       >
         {t.cta}
       </a>

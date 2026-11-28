@@ -11,12 +11,12 @@ import { BADGE_DOT_CLASS, formatFreeDate, useRoomAvailability, type BadgeTone, t
  * jamais de chiffre inventé (dispo inconnue = rien). Jamais le mot « complet » : sans chambre
  * ni date, la maison propose la liste d'attente.
  */
-/** Couleur du « voir → » : doré (#B8860B) par défaut ; l'accueil version B (lot 2a, 27/11/2026) passe la couleur d'accent —
- *  le doré sur fond clair est sous le contraste minimal (§4). Les autres pages ne changent pas dans ce lot. */
+/** Couleur du « voir → » : accent par défaut (lot « couleurs », 28/11/2026, §0.5 : le doré sur fond clair est sous le
+ *  contraste minimal ; il ne sert plus qu'au bouton principal et aux étoiles). */
 export function HouseAvailabilityLine({
   house,
   className = "",
-  linkClassName = "text-[#B8860B]",
+  linkClassName = "text-lvc-accent",
 }: { house: HouseKey; className?: string; linkClassName?: string }) {
   const { language } = useLanguage();
   const L = language === "en" ? "en" as const : "fr" as const;

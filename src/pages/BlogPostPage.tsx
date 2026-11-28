@@ -393,7 +393,7 @@ export function BlogPostPage() {
       // Ancres internes (#chapitre, ex. depuis le sommaire) : <a> natif même onglet,
       // surtout PAS un Link routeur ni un target=_blank.
       if (href && href.startsWith('#')) {
-        return <a href={href} className="text-[#D4A574] hover:underline">{children}</a>;
+        return <a href={href} className="text-lvc-accent hover:underline">{children}</a>;
       }
       // Internal links use React Router for SPA navigation + better SEO signal
       if (href && (href.startsWith('/') || href.startsWith('https://www.lavillacoliving.com'))) {
@@ -424,7 +424,7 @@ export function BlogPostPage() {
             <LocalizedLink
               to={loc(to)}
               onClick={() => trackBodyCta(to, src)}
-              className="text-[#D4A574] hover:underline"
+              className="text-lvc-accent hover:underline"
             >
               {children}
             </LocalizedLink>
@@ -435,7 +435,7 @@ export function BlogPostPage() {
             <LocalizedLink
               to={loc(internalPath)}
               onClick={() => trackBodyCta(internalPath, "article_cta")}
-              className="text-[#D4A574] hover:underline"
+              className="text-lvc-accent hover:underline"
             >
               {children}
             </LocalizedLink>
@@ -443,14 +443,14 @@ export function BlogPostPage() {
         }
         // Content stores language-neutral paths; on the EN site, prefix /en so
         // anglophone readers stay on EN pages (every FR route has an /en twin).
-        return <LocalizedLink to={loc(internalPath)} className="text-[#D4A574] hover:underline">{children}</LocalizedLink>;
+        return <LocalizedLink to={loc(internalPath)} className="text-lvc-accent hover:underline">{children}</LocalizedLink>;
       }
       // (Lot B) Numéro de téléphone : lien natif, même onglet.
       if (href && href.startsWith('tel:')) {
-        return <a href={href} className="text-[#D4A574] hover:underline">{children}</a>;
+        return <a href={href} className="text-lvc-accent hover:underline">{children}</a>;
       }
       // External links open in new tab
-      return <a href={href} className="text-[#D4A574] hover:underline" target="_blank" rel="noopener noreferrer">{children}</a>;
+      return <a href={href} className="text-lvc-accent hover:underline" target="_blank" rel="noopener noreferrer">{children}</a>;
     },
     table: ({children}: {children?: React.ReactNode}) => (
       <div className="overflow-x-auto my-8">
@@ -461,7 +461,7 @@ export function BlogPostPage() {
     th: ({children}: {children?: React.ReactNode}) => <th scope="col" className="border border-[#E7E5E4] px-4 py-3 text-left font-semibold text-[#1C1917]">{children}</th>,
     td: ({children}: {children?: React.ReactNode}) => <td className="border border-[#E7E5E4] px-4 py-3">{children}</td>,
     blockquote: ({children}: {children?: React.ReactNode}) => (
-      <blockquote className="border-l-4 border-[#D4A574] pl-6 italic text-[#57534E] my-6">{children}</blockquote>
+      <blockquote className="border-l-4 border-lvc-accent pl-6 italic text-[#57534E] my-6">{children}</blockquote>
     ),
   };
 
@@ -540,7 +540,7 @@ export function BlogPostPage() {
         <div className="max-w-3xl mx-auto px-6">
           {/* flex w-fit (et non inline-flex) : bloc-niveau largeur-contenu, sinon le
               badge catégorie « inline-block » se colle sur la même ligne (collision). */}
-          <LocalizedLink to="/blog" className="flex w-fit items-center gap-2 text-[#57534E] hover:text-[#D4A574] mb-8 text-sm transition-colors">
+          <LocalizedLink to="/blog" className="flex w-fit items-center gap-2 text-[#57534E] hover:text-lvc-accent mb-8 text-sm transition-colors">
             <ArrowLeft className="w-4 h-4" />
             {language==="en"?"Back to blog":"Retour au blog"}
           </LocalizedLink>
@@ -556,7 +556,7 @@ export function BlogPostPage() {
               {isDuo ? (
                 <>
                   {ABOUT_PAGE_LIVE ? (
-                    <LocalizedLink to="/qui-sommes-nous" className="text-[#44403C] hover:text-[#D4A574] transition-colors">
+                    <LocalizedLink to="/qui-sommes-nous" className="text-[#44403C] hover:text-lvc-accent transition-colors">
                       {founders.map((f) => f.name.split(" ")[0]).join(language === "en" ? " and " : " et ")}
                     </LocalizedLink>
                   ) : (
@@ -569,7 +569,7 @@ export function BlogPostPage() {
               ) : founder ? (
                 <>
                   {ABOUT_PAGE_LIVE ? (
-                    <LocalizedLink to="/qui-sommes-nous" className="text-[#44403C] hover:text-[#D4A574] transition-colors">
+                    <LocalizedLink to="/qui-sommes-nous" className="text-[#44403C] hover:text-lvc-accent transition-colors">
                       {founder.name}
                     </LocalizedLink>
                   ) : (
@@ -614,13 +614,13 @@ export function BlogPostPage() {
               aria-label={language === "en" ? "Table of contents" : "Sommaire"}
               className="mb-10 p-6 bg-[#FAF9F6] border border-[#E7E5E4] rounded-lg"
             >
-              <p className="text-xs uppercase tracking-widest text-[#D4A574] mb-4">
+              <p className="text-xs uppercase tracking-widest text-lvc-accent mb-4">
                 {language === "en" ? "Contents" : "Sommaire"}
               </p>
               <ul className="list-none space-y-2 text-[#44403C]">
                 {toc.map((t) => (
                   <li key={t.slug}>
-                    <a href={`#${t.slug}`} className="hover:text-[#D4A574] hover:underline transition-colors">
+                    <a href={`#${t.slug}`} className="hover:text-lvc-accent hover:underline transition-colors">
                       {t.title}
                     </a>
                   </li>
@@ -706,13 +706,13 @@ export function BlogPostPage() {
                 key={h.slug}
                 to={language === "en" ? `/en/${h.slug}` : `/${h.slug}`}
                 onClick={() => markInternalRef("article_cta", post.slug, "end")}
-                className="group bg-white border border-[#E7E5E4] overflow-hidden hover:border-[#D4A574]/40 hover:shadow-lg transition-all"
+                className="group bg-white border border-[#E7E5E4] overflow-hidden hover:border-[#2F5D50]/40 hover:shadow-lg transition-all"
               >
                 <div className="aspect-[16/10] overflow-hidden">
                   <img src={h.img} alt={`${h.labelFr} — coliving près de Genève`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                 </div>
                 <div className="p-5">
-                  <h3 className="text-lg text-[#1C1917] mb-1 group-hover:text-[#D4A574] transition-colors">
+                  <h3 className="text-lg text-[#1C1917] mb-1 group-hover:text-lvc-accent transition-colors">
                     {language === "en" ? h.labelEn : h.labelFr}
                   </h3>
                   <p className="text-sm text-[#57534E]">{language === "en" ? h.descEn : h.descFr}</p>
@@ -740,7 +740,7 @@ export function BlogPostPage() {
                   <LocalizedLink
                     to={`/blog/${r.slug}`}
                     key={r.id}
-                    className="group bg-white border border-[#E7E5E4] overflow-hidden hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
+                    className="group bg-white border border-[#E7E5E4] overflow-hidden hover:border-[#2F5D50]/30 hover:shadow-lg transition-all"
                   >
                     {r.image_url && (
                       <div className="aspect-[16/10] overflow-hidden">
@@ -748,10 +748,10 @@ export function BlogPostPage() {
                       </div>
                     )}
                     <div className="p-5">
-                      <span className="text-xs uppercase tracking-widest text-[#D4A574] font-medium mb-2 block">
+                      <span className="text-xs uppercase tracking-widest text-lvc-accent font-medium mb-2 block">
                         {CL[r.category]?.[language] || r.category}
                       </span>
-                      <h3 className="text-base text-[#1C1917] mb-2 line-clamp-2 group-hover:text-[#D4A574] transition-colors">
+                      <h3 className="text-base text-[#1C1917] mb-2 line-clamp-2 group-hover:text-lvc-accent transition-colors">
                         {typoFr(rTitle)}
                       </h3>
                       <p className="text-sm text-[#57534E] line-clamp-2">{typoFr(rExcerpt)}</p>

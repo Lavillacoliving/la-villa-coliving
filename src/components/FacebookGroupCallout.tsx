@@ -44,7 +44,7 @@ export function FacebookGroupCallout({ position, house, className = "" }: Facebo
         target="_blank"
         rel="noopener noreferrer"
         onClick={track}
-        className="inline-flex items-center gap-2 text-[#1C1917] font-medium underline underline-offset-4 hover:text-[#D4A574] transition-colors"
+        className="inline-flex items-center gap-2 text-[#1C1917] font-medium underline underline-offset-4 hover:text-lvc-accent transition-colors"
       >
         {t.cta}
         <ArrowRight className="w-4 h-4" aria-hidden="true" />

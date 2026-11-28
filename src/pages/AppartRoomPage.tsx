@@ -93,7 +93,7 @@ export function AppartRoomPage() {
       <main className="pt-32 pb-20 bg-white">
         <div className="container-custom text-center">
           <h1 className="text-3xl mb-4 text-[#1C1917]">{en ? "Room not found" : "Chambre introuvable"}</h1>
-          <LocalizedLink to="/chambres-disponibles" className="text-[#B8860B] font-semibold underline underline-offset-4">
+          <LocalizedLink to="/chambres-disponibles" className="text-lvc-accent font-semibold underline underline-offset-4">
             {en ? "See the available rooms" : "Voir les chambres disponibles"}
           </LocalizedLink>
         </div>
@@ -210,7 +210,7 @@ export function AppartRoomPage() {
 
   const priceCard = (
     <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
-      <p className="text-3xl font-black text-[#D4A574]">
+      <p className="text-3xl font-black text-lvc-accent">
         {price.chf}
         <span className="text-base font-light text-[#78716C]">{price.perMonth}</span>
       </p>
@@ -243,7 +243,7 @@ export function AppartRoomPage() {
       <ul className="mt-5 space-y-2">
         {appartRoomReassurance(L).map((r) => (
           <li key={r} className="flex items-start gap-2 text-sm text-[#57534E]">
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#B8860B]" />
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-lvc-accent" />
             <span>{r}</span>
           </li>
         ))}
@@ -333,7 +333,7 @@ export function AppartRoomPage() {
                   const Icon = SPEC_ICONS[kind];
                   return (
                     <div key={kind} className="flex items-start gap-3 rounded-xl border border-[#E7E5E4] px-4 py-3">
-                      <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#B8860B]" aria-hidden="true" />
+                      <Icon className="mt-0.5 h-5 w-5 shrink-0 text-lvc-accent" aria-hidden="true" />
                       <div>
                         <dt className="text-xs uppercase tracking-wider text-[#78716C]">{label}</dt>
                         <dd className="text-[#1C1917] font-semibold">{value}</dd>
@@ -349,7 +349,7 @@ export function AppartRoomPage() {
               <ul aria-label={en ? "Included" : "Compris"} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {included.included.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[#44403C]">
-                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#B8860B]" aria-hidden="true" />
+                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-lvc-accent" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -376,7 +376,7 @@ export function AppartRoomPage() {
               <ul className="mt-3 space-y-1.5">
                 {place.commute.map((c) => (
                   <li key={c} className="flex items-start gap-2 text-[#44403C]">
-                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#B8860B]" aria-hidden="true" />
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-lvc-accent" aria-hidden="true" />
                     <span>{c}</span>
                   </li>
                 ))}
@@ -384,7 +384,7 @@ export function AppartRoomPage() {
               <LocalizedLink
                 to={`/${APPART.key}`}
                 onClick={() => track("house_discover_click", { house: APPART.key, cta_position: "room_page", language })}
-                className="mt-5 inline-flex items-center gap-2 font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]"
+                className="mt-5 inline-flex items-center gap-2 font-semibold text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent"
               >
                 {place.cta}
                 <ArrowRight className="w-4 h-4" />

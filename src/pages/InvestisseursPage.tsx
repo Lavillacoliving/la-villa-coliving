@@ -49,7 +49,7 @@ export function InvestisseursPage() {
       {/* ============================================ */}
       <section className="bg-[#1C1917] py-24 lg:py-32">
         <div className="container-custom text-center">
-          <span className="lvc-eyebrow text-[#D4A574] mb-4">
+          <span className="lvc-eyebrow text-[#E0BB8A] mb-4">
             {language === "en"
               ? "PARTNERS & INVESTORS"
               : "PARTENAIRES & INVESTISSEURS"}
@@ -172,7 +172,7 @@ export function InvestisseursPage() {
       <section id="modele" className="bg-[#1C1917] py-24 lg:py-32">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <span className="lvc-eyebrow text-[#D4A574] mb-4">
+            <span className="lvc-eyebrow text-[#E0BB8A] mb-4">
               {language === "en" ? "OUR MODEL" : "NOTRE MODÈLE"}
             </span>
             <h2
@@ -263,7 +263,7 @@ export function InvestisseursPage() {
                 key={i}
                 className="bg-stone-800 border border-stone-700 rounded-2xl p-6"
               >
-                <card.icon className="w-8 h-8 text-[#D4A574] mb-4" />
+                <card.icon className="w-8 h-8 text-[#E0BB8A] mb-4" />
                 <h3 className="text-lg font-semibold text-white mb-2">
                   {card.title}
                 </h3>
@@ -275,7 +275,7 @@ export function InvestisseursPage() {
           </div>
 
           {/* Encart différenciateur */}
-          <div className="max-w-3xl mx-auto bg-stone-800 border border-[#D4A574]/30 rounded-2xl p-6 md:p-8">
+          <div className="max-w-3xl mx-auto bg-stone-800 border border-[#E0BB8A]/30 rounded-2xl p-6 md:p-8">
             <p className="text-stone-300 leading-relaxed">
               <span className="text-white font-semibold">
                 {language === "en"
@@ -311,8 +311,8 @@ export function InvestisseursPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Column 1 */}
             <div className="text-center">
-              <div className="w-16 h-16 rounded-2xl bg-[#D4A574]/10 flex items-center justify-center mx-auto mb-6">
-                <TrendingUp className="w-8 h-8 text-[#D4A574]" />
+              <div className="w-16 h-16 rounded-2xl bg-lvc-tint flex items-center justify-center mx-auto mb-6">
+                <TrendingUp className="w-8 h-8 text-lvc-accent" />
               </div>
               <p
                 className="text-4xl text-[#1C1917] mb-1"
@@ -320,7 +320,7 @@ export function InvestisseursPage() {
               >
                 {occ.value}
               </p>
-              <p className="text-sm font-semibold text-[#D4A574] uppercase tracking-wider mb-3">
+              <p className="text-sm font-semibold text-lvc-accent uppercase tracking-wider mb-3">
                 {language === "en" ? "Room-days occupied" : "Jours-chambre occupés"}
               </p>
               <p className="text-[#57534E] text-sm leading-relaxed">
@@ -332,8 +332,8 @@ export function InvestisseursPage() {
 
             {/* Column 2 */}
             <div className="text-center">
-              <div className="w-16 h-16 rounded-2xl bg-[#D4A574]/10 flex items-center justify-center mx-auto mb-6">
-                <Heart className="w-8 h-8 text-[#D4A574]" />
+              <div className="w-16 h-16 rounded-2xl bg-lvc-tint flex items-center justify-center mx-auto mb-6">
+                <Heart className="w-8 h-8 text-lvc-accent" />
               </div>
               <p
                 className="text-4xl text-[#1C1917] mb-1"
@@ -341,7 +341,7 @@ export function InvestisseursPage() {
               >
                 {language === "en" ? "Community" : "Communauté"}
               </p>
-              <p className="text-sm font-semibold text-[#D4A574] uppercase tracking-wider mb-3">
+              <p className="text-sm font-semibold text-lvc-accent uppercase tracking-wider mb-3">
                 {language === "en"
                   ? "Not just real estate"
                   : "Pas juste de l'immobilier"}
@@ -355,8 +355,8 @@ export function InvestisseursPage() {
 
             {/* Column 3 */}
             <div className="text-center">
-              <div className="w-16 h-16 rounded-2xl bg-[#D4A574]/10 flex items-center justify-center mx-auto mb-6">
-                <Award className="w-8 h-8 text-[#D4A574]" />
+              <div className="w-16 h-16 rounded-2xl bg-lvc-tint flex items-center justify-center mx-auto mb-6">
+                <Award className="w-8 h-8 text-lvc-accent" />
               </div>
               <p
                 className="text-4xl text-[#1C1917] mb-1"
@@ -364,7 +364,7 @@ export function InvestisseursPage() {
               >
                 {language === "en" ? `${YEARS_IN_OPERATION} years` : `${YEARS_IN_OPERATION} ans`}
               </p>
-              <p className="text-sm font-semibold text-[#D4A574] uppercase tracking-wider mb-3">
+              <p className="text-sm font-semibold text-lvc-accent uppercase tracking-wider mb-3">
                 {language === "en" ? "Of experience" : "D'expérience"}
               </p>
               <p className="text-[#57534E] text-sm leading-relaxed">
@@ -416,7 +416,7 @@ export function InvestisseursPage() {
                     ]
                 ).map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#D4A574] mt-0.5 flex-shrink-0" />
+                    <Check className="w-5 h-5 text-lvc-accent mt-0.5 flex-shrink-0" />
                     <span className="text-[#57534E] font-medium">{item}</span>
                   </div>
                 ))}
@@ -454,7 +454,7 @@ export function InvestisseursPage() {
       <section id="contact" className="bg-[#1C1917] py-24 lg:py-32">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <span className="lvc-eyebrow text-[#D4A574] mb-4">
+            <span className="lvc-eyebrow text-[#E0BB8A] mb-4">
               {language === "en"
                 ? "LET'S TALK ABOUT YOUR PROJECT"
                 : "PARLONS DE VOTRE PROJET"}
@@ -492,7 +492,7 @@ export function InvestisseursPage() {
                     name="fullName"
                     required
                     autoComplete="name"
-                    className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#D4A574] focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#E0BB8A] focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -507,7 +507,7 @@ export function InvestisseursPage() {
                       name="email"
                       required
                       autoComplete="email"
-                      className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#D4A574] focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#E0BB8A] focus:outline-none transition-colors"
                     />
                   </div>
                   <div>
@@ -519,7 +519,7 @@ export function InvestisseursPage() {
                       name="phone"
                       required
                       autoComplete="tel"
-                      className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#D4A574] focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#E0BB8A] focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -532,7 +532,7 @@ export function InvestisseursPage() {
                   <select
                     name="profil"
                     required
-                    className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white focus:border-[#D4A574] focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white focus:border-[#E0BB8A] focus:outline-none transition-colors"
                   >
                     <option value="">
                       {language === "en" ? "Select" : "Sélectionner"}
@@ -564,7 +564,7 @@ export function InvestisseursPage() {
                     <input
                       type="text"
                       name="localisation"
-                      className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#D4A574] focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#E0BB8A] focus:outline-none transition-colors"
                     />
                   </div>
                   <div>
@@ -576,7 +576,7 @@ export function InvestisseursPage() {
                     <input
                       type="text"
                       name="surface"
-                      className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#D4A574] focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#E0BB8A] focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -591,7 +591,7 @@ export function InvestisseursPage() {
                   <textarea
                     name="message"
                     rows={4}
-                    className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#D4A574] focus:outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-stone-900 border border-stone-600 rounded-xl text-white placeholder-stone-500 focus:border-[#E0BB8A] focus:outline-none transition-colors resize-none"
                   />
                 </div>
 

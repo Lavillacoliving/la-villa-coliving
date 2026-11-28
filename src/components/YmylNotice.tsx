@@ -100,7 +100,7 @@ export function AuthorBox({ author }: { author: string }) {
   // Tant que /qui-sommes-nous n'est pas routée (ABOUT_PAGE_LIVE=false), le nom
   // s'affiche sans lien interne — aucun lien mort en prod.
   const founderName = ABOUT_PAGE_LIVE ? (
-    <LocalizedLink to="/qui-sommes-nous" className="font-medium text-[#1C1917] hover:text-[#D4A574]">
+    <LocalizedLink to="/qui-sommes-nous" className="font-medium text-[#1C1917] hover:text-lvc-accent">
       {founder.name}
     </LocalizedLink>
   ) : (
@@ -110,7 +110,7 @@ export function AuthorBox({ author }: { author: string }) {
     <aside className="mt-6 p-5 border border-[#E7E5E4] rounded-lg flex items-start gap-4">
       <div
         aria-hidden="true"
-        className="w-12 h-12 rounded-full bg-[#1C1917] text-[#D4A574] flex items-center justify-center text-lg flex-shrink-0"
+        className="w-12 h-12 rounded-full bg-[#1C1917] text-[#E0BB8A] flex items-center justify-center text-lg flex-shrink-0"
         style={{ fontFamily: '"DM Serif Display", serif' }}
       >
         {founder.name.charAt(0)}
@@ -135,7 +135,7 @@ export function AuthorBox({ author }: { author: string }) {
         </p>
         <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
           {ABOUT_PAGE_LIVE && (
-            <LocalizedLink to="/qui-sommes-nous" className="text-[#D4A574] hover:underline">
+            <LocalizedLink to="/qui-sommes-nous" className="text-lvc-accent hover:underline">
               {fr ? "Qui sommes-nous" : "Who we are"}
             </LocalizedLink>
           )}
@@ -143,7 +143,7 @@ export function AuthorBox({ author }: { author: string }) {
             href={founder.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[#78716C] hover:text-[#D4A574] transition-colors"
+            className="inline-flex items-center gap-1 text-[#78716C] hover:text-lvc-accent transition-colors"
           >
             <Linkedin size={14} />
             LinkedIn
@@ -163,7 +163,7 @@ function AuthorBoxDuo({ fr, founders }: { fr: boolean; founders: Founder[] }) {
         {founders.map((f) => (
           <div
             key={f.name}
-            className="w-12 h-12 rounded-full bg-[#1C1917] text-[#D4A574] border-2 border-white flex items-center justify-center text-lg"
+            className="w-12 h-12 rounded-full bg-[#1C1917] text-[#E0BB8A] border-2 border-white flex items-center justify-center text-lg"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {f.name.charAt(0)}
@@ -178,7 +178,7 @@ function AuthorBoxDuo({ fr, founders }: { fr: boolean; founders: Founder[] }) {
         </p>
         <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
           {ABOUT_PAGE_LIVE && (
-            <LocalizedLink to="/qui-sommes-nous" className="text-[#D4A574] hover:underline">
+            <LocalizedLink to="/qui-sommes-nous" className="text-lvc-accent hover:underline">
               {fr ? "Qui sommes-nous" : "Who we are"}
             </LocalizedLink>
           )}
@@ -188,7 +188,7 @@ function AuthorBoxDuo({ fr, founders }: { fr: boolean; founders: Founder[] }) {
               href={f.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#78716C] hover:text-[#D4A574] transition-colors"
+              className="inline-flex items-center gap-1 text-[#78716C] hover:text-lvc-accent transition-colors"
             >
               <Linkedin size={14} />
               {`LinkedIn · ${f.name.split(" ")[0]}`}

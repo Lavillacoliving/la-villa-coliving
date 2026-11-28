@@ -362,12 +362,12 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
       <div className="p-6 flex flex-col flex-1">
         {gammeBadge && <p data-gamme-badge className={GAMME_BADGE_CLASS}>{gammeBadge}</p>}
         {showHouse && (
-          <p className="text-xs font-semibold uppercase tracking-wider text-[#B8860B] mb-1">{houseName}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-lvc-accent mb-1">{houseName}</p>
         )}
         <h3 className="text-lg text-[#1C1917] mb-1">
           {/* (28/09/2026) Fiche chambre quand elle existe ET est consultable (roomPages.ts). */}
           {isRoomPageOpen(house, room) ? (
-            <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#B8860B] transition-colors">
+            <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-lvc-accent transition-colors">
               {label}
             </LocalizedLink>
           ) : (
@@ -385,7 +385,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
             <p data-lease-start className="mb-2 text-sm font-semibold text-[#7A5215]">{leaseStart}</p>
           )}
           {room.rent_chf !== null && (
-            <p className={`text-xl font-black text-[#D4A574] ${inclusions ? "mb-1" : "mb-4"}`}>
+            <p className={`text-xl font-black text-lvc-accent ${inclusions ? "mb-1" : "mb-4"}`}>
               {language === "en"
                 ? `CHF ${thousands(room.rent_chf, ",")}`
                 : `${thousands(room.rent_chf, "\u00a0")} CHF`}
@@ -426,7 +426,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
             <div className="mt-3 text-center">
               <LocalizedLink
                 to={roomPagePath(house, room.room_number)}
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent"
               >
                 {language === "en" ? "See the room's page" : "Voir la fiche de la chambre"}
                 <ArrowRight className="w-3.5 h-3.5" />

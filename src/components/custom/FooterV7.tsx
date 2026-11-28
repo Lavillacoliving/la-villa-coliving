@@ -141,14 +141,14 @@ export function FooterV7() {
               <div className="flex items-start gap-3">
                 <MapPin
                   size={18}
-                  className="text-[#D4A574] mt-0.5 flex-shrink-0"
+                  className="text-[#E0BB8A] mt-0.5 flex-shrink-0"
                 />
                 <span className="text-[#A8A29E] text-sm">
                   Grand Genève, France
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <Mail size={18} className="text-[#D4A574] flex-shrink-0" />
+                <Mail size={18} className="text-[#E0BB8A] flex-shrink-0" />
                 <a
                   href="mailto:contact@lavillacoliving.com"
                   className="text-[#A8A29E] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
@@ -157,7 +157,7 @@ export function FooterV7() {
                 </a>
               </div>
               <div className="flex items-center gap-3">
-                <Phone size={18} className="text-[#D4A574] flex-shrink-0" />
+                <Phone size={18} className="text-[#E0BB8A] flex-shrink-0" />
                 <a
                   href="tel:+33664315134"
                   className="text-[#A8A29E] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
@@ -166,7 +166,7 @@ export function FooterV7() {
                 </a>
               </div>
               <div className="flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-[18px] h-[18px] flex-shrink-0 text-[#D4A574] fill-current">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-[18px] h-[18px] flex-shrink-0 text-[#E0BB8A] fill-current">
                   <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.128 6.744 3.046 9.378L1.054 31.29l6.118-1.958A15.905 15.905 0 0016.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.336 22.594c-.39 1.1-1.932 2.014-3.182 2.28-.854.18-1.968.324-5.722-1.23-4.806-1.988-7.898-6.868-8.138-7.188-.228-.32-1.918-2.554-1.918-4.872s1.214-3.456 1.644-3.928c.43-.472.94-.59 1.252-.59.312 0 .624.002.898.016.288.014.674-.11.998.762.39 1.05 1.098 3.456 1.176 3.696.078.24.312.766-.078 1.236-.156.236-.39.54-.546.696-.312.312-.234.546.078.94.312.39 1.384 2.282 2.97 3.696 2.042 1.818 3.764 2.38 4.298 2.638.43.208.684.174.936-.104.252-.28 1.084-1.264 1.374-1.698.288-.43.578-.358.976-.214.398.144 2.526 1.192 2.958 1.41.43.214.718.324.824.5.104.18.104 1.028-.286 2.128z" />
                 </svg>
                 <a
