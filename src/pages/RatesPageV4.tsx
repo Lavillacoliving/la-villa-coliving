@@ -535,10 +535,10 @@ function AppartSection({ L }: { L: TarifsLang }) {
 function ApplySection({ L }: { L: TarifsLang }) {
   const T = applyBlock(L);
   return (
-    <section className="py-20 lg:py-24 bg-[#D4A574]">
+    <section className="py-20 lg:py-24 bg-[#1C1917]">
       <div className="container-custom text-center">
         <h2 className="text-3xl md:text-4xl text-white mb-4">{T.title}</h2>
-        <p className="text-lg text-white/90 max-w-xl mx-auto mb-8">{T.text}</p>
+        <p className="text-lg text-white/85 max-w-xl mx-auto mb-8">{T.text}</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <LocalizedLink
             to="/chambres-disponibles"

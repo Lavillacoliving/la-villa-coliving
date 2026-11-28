@@ -404,7 +404,7 @@ export function ColocationGenevePage() {
       {/* ===== CTA FINAL ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl mb-6">{en ? "Ready to find your room near Geneva?" : "Prêt à trouver ta chambre près de Genève ?"}</h2>
+          <h2 className="text-3xl md:text-4xl text-white mb-6">{en ? "Ready to find your room near Geneva?" : "Prêt à trouver ta chambre près de Genève ?"}</h2>
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
             {en ? "Book a visit, on site or by video. Reply within 48 h. Move in within 72 h of your first contact if a room is available." : "Programme une visite, sur place ou en vidéo. Réponse sous 48 h. Emménagement en 72 h dès le premier contact si une chambre est disponible."}
           </p>

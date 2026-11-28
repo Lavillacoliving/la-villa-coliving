@@ -436,16 +436,16 @@ export function ColivingPageV4() {
             {language === "en" ? (
               <>
                 "La Villa isn't just a place to live—it's a{" "}
-                <span className="text-[#D4A574] font-medium">community</span>{" "}
+                <span className="text-[#D4A574]">community</span>{" "}
                 that becomes{" "}
-                <span className="text-[#D4A574] font-medium">family</span>."
+                <span className="text-[#D4A574]">family</span>."
               </>
             ) : (
               <>
                 "La Villa n'est pas qu'un lieu de vie—c'est une{" "}
-                <span className="text-[#D4A574] font-medium">communauté</span>{" "}
+                <span className="text-[#D4A574]">communauté</span>{" "}
                 qui devient{" "}
-                <span className="text-[#D4A574] font-medium">famille</span>."
+                <span className="text-[#D4A574]">famille</span>."
               </>
             )}
           </p>

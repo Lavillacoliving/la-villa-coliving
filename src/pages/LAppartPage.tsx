@@ -319,7 +319,7 @@ export function LAppartPage() {
           le premier paragraphe, puis « Lire la suite » ; le reste est toujours dans le HTML et toujours affiché à partir de md. */}
       <section className="py-8 md:py-16 relative bg-white">
         <div className="container-custom">
-          <div className="max-w-3xl space-y-4 text-base md:text-lg text-[#57534E] leading-relaxed font-medium">
+          <div className="max-w-3xl space-y-4 text-base md:text-lg text-[#57534E] leading-relaxed">
             <p>{lead.lead}</p>
             <div className={introOpen ? "space-y-4" : "hidden md:block space-y-4"}>
               <p>{lead.price}</p>

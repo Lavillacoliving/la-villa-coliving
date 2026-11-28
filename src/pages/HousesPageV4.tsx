@@ -385,7 +385,7 @@ export function HousesPageV4() {
                   </th>
                   {houses.map((house) => (
                     <th key={house.id} className="py-4 px-4 text-center w-1/4">
-                      <span className="text-lg text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                      <span className="text-lg font-normal text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
                         {house.name}
                       </span>
                       <span className="block text-xs text-[#78716C] mt-1">{house.location}</span>

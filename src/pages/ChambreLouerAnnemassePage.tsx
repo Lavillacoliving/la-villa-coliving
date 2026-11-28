@@ -392,7 +392,7 @@ export function ChambreLouerAnnemassePage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <Calendar className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
           <h2
-            className="text-3xl md:text-4xl mb-6"
+            className="text-3xl md:text-4xl text-white mb-6"
           >
             {language === "en"
               ? "Check current room availability"

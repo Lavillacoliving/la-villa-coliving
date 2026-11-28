@@ -2215,7 +2215,7 @@ export function HouseDetailPage() {
                         HTML (garde : chaque « Chambre N » nommée) et toujours dépliée à partir de md. Sans chambre candidate,
                         elle reste visible : c'est alors la seule vue des chambres. */}
                     {candidates.length > 0 && (
-                      <h2 className="md:hidden mb-4">
+                      <h2 className="md:hidden mb-4 lvc-ui-heading">
                         <button
                           type="button"
                           aria-expanded={othersOpen}

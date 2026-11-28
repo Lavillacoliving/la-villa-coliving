@@ -494,7 +494,7 @@ export function AnnemasseColocationPage() {
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2
-            className="text-3xl md:text-4xl mb-6"
+            className="text-3xl md:text-4xl text-white mb-6"
           >
             {language === "en"
               ? "Ready for a coliving room in Annemasse?"

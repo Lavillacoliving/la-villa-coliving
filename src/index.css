@@ -296,6 +296,10 @@ html.lvc-offer-on #root > div > main > [data-home-section="hero"] > section.pt-2
   .lvc-h1-accent--on-photo {
     color: var(--lvc-gold-soft);
   }
+  /* (Lot 2a, 28/11/2026) Titre qui porte une commande d'interface (bouton d'accordéon dans un H2) : reste en Inter. */
+  .lvc-ui-heading {
+    font-family: 'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
+  }
   /* Surtitre de section : Inter 600, 12 px, capitales espacées, couleur d'accent (§0.5). */
   .lvc-eyebrow {
     display: block;

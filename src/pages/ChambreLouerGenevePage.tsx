@@ -336,7 +336,7 @@ export function ChambreLouerGenevePage() {
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <Calendar className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-          <h2 className="text-3xl md:text-4xl mb-6">{en ? "See the rooms available right now" : "Voir les chambres disponibles maintenant"}</h2>
+          <h2 className="text-3xl md:text-4xl text-white mb-6">{en ? "See the rooms available right now" : "Voir les chambres disponibles maintenant"}</h2>
           {/* (L'Appart, E4, S11.6) Les chambres de la marque (33 : ENTITY_FACTS.brand). */}
           <p className="text-lg text-white/80 mb-10 leading-relaxed">
             {en ? `Availability changes every week across our ${ENTITY_FACTS.brand.totalRooms} rooms. Pick a room or join a waiting list: we reply within 48 h.` : `Les disponibilités évoluent chaque semaine sur nos ${ENTITY_FACTS.brand.totalRooms} chambres. Choisis une chambre ou rejoins une liste d'attente : on te répond sous 48 h.`}
