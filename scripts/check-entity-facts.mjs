@@ -12,7 +12,7 @@
  *      0 bloc ailleurs ; aucune chaîne périmée (1 380 CHF, ménage 2×, 25-35 min, séjour 2 mois, bail 1 à
  *      12 mois, placeholders) dans le texte visible du site ; JSON-LD : ≤ 1 LocalBusiness/LodgingBusiness
  *      d'entité et ≤ 1 FAQPage par page, 0 aggregateRating, numberOfRooms cohérents, aucun Offer/AggregateOffer
- *      de premier niveau contradictoire (jsonLdConflicts, 08/10/2026) ;
+ *      de premier niveau contradictoire (jsonLdConflicts, 08/10/2026), ni deux blocs différents de même @type (28/11/2026) ;
  *   c) public/llms.txt et public/en/llms.txt = régénération (scripts/build-llms-txt.mjs).
  *   d) (Lot L2 « Emplacement et transport », 09/10/2026) règles d'emplacement : formulations D6/D7 interdites partout
  *      (« mitoyenne », « TPN », numéros de bus, « tram à 1 min », « 500 m, 5 min à pied », « CHUV », « terminus du
@@ -635,10 +635,15 @@ const OFFER_TYPES = new Set(['Offer', 'AggregateOffer']);
  * premier bloc de chaque @type (jsonLdServedKey) : deux blocs de même @type au contenu différent = l'un
  * des deux perdu, selon l'ordre du run. Cas d'origine : /colocation-geneve, Offer InStock + Offer PreOrder
  * laissé par une instance react-helmet fantôme (11 prérendus bot sur 13), Google voyait l'un ou l'autre.
- * Échec : Offer/AggregateOffer de premier niveau à disponibilité contradictoire, ou deux blocs Offer
- * (resp. AggregateOffer) différents. Avertissement : deux blocs différents de tout autre @type.
+ * Échec : Offer/AggregateOffer de premier niveau à disponibilité contradictoire, ou deux blocs différents
+ * de même @type, quel qu'il soit. Deux blocs IDENTIQUES ne comptent pas (l'injection en sert un, sans perte).
  * Les offres IMBRIQUÉES ne comptent pas : l'ItemList de /chambres-disponibles mêle légitimement des
  * chambres InStock et PreOrder, et l'AggregateOffer du LocalBusiness ne dépend pas de l'inventaire.
+ * (28/11/2026) Les @type autres qu'Offer passent de l'avertissement à l'échec : /colocation-geneve FR et EN
+ * portaient deux WebPage (dateModified 2026-09-04 de repli, puis la date de l'inventaire) dans 32 et 30 des
+ * 40 prérendus du bot du 10 au 28/11, la production servait le premier, et l'avertissement, affiché à
+ * chaque passage, n'avait rien arrêté. Aucune autre page n'avait ce motif sur ces 40 passages.
+ * `warnings` reste dans le retour (toujours vide) pour l'appelant.
  */
 export function jsonLdConflicts(html) {
   const byKey = new Map();
@@ -661,9 +666,9 @@ export function jsonLdConflicts(html) {
   if (availabilities.size > 1) failures.push(`${offers} blocs Offer/AggregateOffer à disponibilité contradictoire (${[...availabilities].join(' / ')}) — l'injection ne sert que le premier de chaque @type`);
   for (const [key, contents] of byKey) {
     if (contents.size < 2) continue;
-    const msg = `${contents.size} blocs JSON-LD « ${key} » différents — l'injection ne sert que le premier`;
-    if (!OFFER_TYPES.has(key)) warnings.push(msg);
-    else if (availabilities.size <= 1) failures.push(msg);
+    // Offer contradictoires : déjà signalés par la disponibilité ci-dessus, un seul message.
+    if (OFFER_TYPES.has(key) && availabilities.size > 1) continue;
+    failures.push(`${contents.size} blocs JSON-LD « ${key} » différents — l'injection ne sert que le premier`);
   }
   return { failures, warnings };
 }
